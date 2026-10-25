@@ -82,11 +82,13 @@ Build mode: fast
 ## Hands-on Checkpoints
 
 - [x] Early usable behavior explored — after slice 3 (negotiate), when the full "needs attention to what others got" journey is visible and feedback can still shape the script
-- [ ] Final kick-the-tires exploration and feedback completed
+- [x] Final kick-the-tires exploration and feedback completed
 
 ## Final Review
 
-- [ ] Final review complete — feedback resolved and learner confirms ready to ship
+- [x] Final review complete — feedback resolved and learner confirms ready to ship
+
+Final review findings (all resolved, verified, committed): neutral brand icons; each subscription listed once; white prices with a neutral no-change indicator and an unchanged-price demo plan; obvious radio-style selection on Negotiate; duplicate-free, expanded demo data for Bell, Rogers and Telus; logo fallbacks (local file, favicon, app-store icon, letter circle). The learner confirmed the proof of concept is ready and may revisit it later; any new change goes here as an unchecked item and is verified and committed like the rest.
 
 ## Code Tour and App Map
 
