@@ -39,17 +39,17 @@ Build mode: fast
   Learner check: Open Negotiate on the Bell subscription, on a different category, and on one with nothing similar. Tell me whether the results and their order make sense to you.
   Commit: `Add negotiate screen with seeded results and matching`
 
-- [ ] **4. Generate a call script with Claude (with a template fallback)**
+- [x] **4. Generate a call script with the LLM (with a template fallback)**
   Becomes usable: From Negotiate, tapping the script button opens a screen with the provider contact (tappable) at the top and a sectioned script (Opening, If they refuse, Closing) that cites the selected result's price. Regenerate and tweak work. If the AI call fails, a template script with the same sections appears with a note.
   Why now: This is the demo's "oh, that's cool" beat and carries the biggest unknown (the SDK and structured output), so it comes right after the data it depends on.
   PRD ref: `prd.md > Script screen`
   Spec ref: `spec.md > Components` (LLM Module and API Routes, Template Script, Script Screen), `spec.md > External Services and Dependencies`, `spec.md > Important Failure Modes`
-  Build: Install `@anthropic-ai/sdk` and `zod`, verify `messages.parse` + `zodOutputFormat` against the installed version, `lib/llm.ts`, `app/api/script/route.ts`, `lib/templateScript.ts`, `.env.example`, `app/subscription/[id]/script/page.tsx` with Regenerate and tweak box.
+  Build: Install `@google/genai` and `zod`, verify JSON-schema structured output against the installed SDK version, `lib/llm.ts`, `app/api/script/route.ts`, `lib/templateScript.ts`, `.env.example`, `app/subscription/[id]/script/page.tsx` with Regenerate and tweak box.
   Verify (mechanical): POST to `/api/script` with a demo subscription and confirm schema-valid sections that mention the chosen price; with the key removed or invalid, confirm the page shows the template script with the note rather than an empty screen.
   Learner check: Choose a result, generate a script, regenerate it, then tweak it ("make it more aggressive") and confirm the tone changes. Then tell me whether you would read it on a call.
-  Commit: `Add Claude-generated call script with template fallback`
+  Commit: `Add LLM-generated call script with template fallback`
 
-- [ ] **5. Describe your plan in your own words and have Claude structure it**
+- [ ] **5. Describe your plan in your own words and have the LLM structure it**
   Becomes usable: The Add form sends the plan description to Claude, which returns structured plan features and a website domain; features show on the detail screen and improve Negotiate matching. A failed call shows a plain error and keeps what was typed.
   Why now: Matching quality depends on structured features, but slices 1–4 already work with raw text, so this improves them rather than blocking them.
   PRD ref: `prd.md > Add subscription` (Plan), `prd.md > States and Boundaries`
@@ -57,7 +57,7 @@ Build mode: fast
   Build: `app/api/plan/route.ts`, wire `SubscriptionForm` to call it on save, store `planFeatures` and `logoDomain`, show features on the detail screen.
   Verify (mechanical): POST a sample plan description to `/api/plan` and confirm schema-valid features and domain; with an invalid key confirm the form shows the error and keeps its values.
   Learner check: Add a new subscription with a plan described in your own words and confirm the features on the detail screen match what you meant.
-  Commit: `Structure plan descriptions with Claude`
+  Commit: `Structure plan descriptions with the LLM`
 
 - [ ] **6. Edit, cancel, restore and delete**
   Becomes usable: Edit updates a subscription and the list and status update; Cancel moves it to the Cancelled tab; Restore brings it back; Delete removes it permanently. Active items have no delete.
@@ -102,3 +102,4 @@ Activity mode:
 
 ## Revisions
 - Active list shows each subscription once (needs-attention items are not repeated under "Other subscriptions"), and the letter-circle icon is neutral gray instead of multicolor — the learner found the colored icons confusing next to the green-to-red status colors and the duplicate rows confusing; this refines `prd.md > Subscription list` and `spec.md > Brand Icon`.
+- LLM provider switched from the Anthropic API to the Google Gemini API (`@google/genai`, `GEMINI_API_KEY`, optional `GEMINI_MODEL`) — the learner chose Gemini during slice 4, before the live LLM call had been verified. Only `lib/llm.ts`, `.env.example` and the docs changed; `spec.md` Stack, External Services and Decisions were updated to match.

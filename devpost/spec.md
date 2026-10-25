@@ -16,9 +16,9 @@ There are four pieces:
 1. **The screens (React, in the browser).** Active list, Cancelled list, Add/Edit form, Detail, Negotiate, Script. They run on your phone-sized browser window.
 2. **The notebook (`localStorage`).** Every subscription you add is saved in the browser itself, like a sticky note the browser keeps for this site. Close the app, come back next week, and the same subscriptions are there. No accounts, no database.
 3. **The seeded results (a JSON file).** `data/negotiations.json` holds the pre-written "what others negotiated" examples. Plain TypeScript code (no AI) decides which ones match your subscription's plan.
-4. **The small server (two Next.js API routes).** This is the only place your secret Anthropic API key lives. The browser sends it a request ("structure this plan description", "write a call script"), the server calls Claude, and sends the answer back. The key never reaches the browser.
+4. **The small server (two Next.js API routes).** This is the only place your secret Gemini API key lives. The browser sends it a request ("structure this plan description", "write a call script"), the server calls Claude, and sends the answer back. The key never reaches the browser.
 
-Claude does exactly two jobs: turn your typed plan description into structured features (and guess the brand's website for the logo), and write the sectioned call script from your subscription plus the negotiation result you picked. Everything else (dates, prices, colors, "needs attention", matching) is ordinary code, so it is predictable and easy to demo.
+The LLM (Google Gemini) does exactly two jobs: turn your typed plan description into structured features (and guess the brand's website for the logo), and write the sectioned call script from your subscription plus the negotiation result you picked. Everything else (dates, prices, colors, "needs attention", matching) is ordinary code, so it is predictable and easy to demo.
 
 Why this shape: it's one project and one command to run, it needs no database or login, and the LLM calls sit behind one small module so the provider or model can be swapped later.
 
@@ -40,23 +40,23 @@ PRD ref: `prd.md > The Core Journey`.
 |---|---|---|
 | Framework | Next.js (App Router), React, TypeScript — [docs](https://nextjs.org/docs) | Learner-chosen. One project: screens plus server routes. Tradeoff accepted: some behavior comes from Next.js folder conventions. |
 | Styling | Tailwind CSS (create-next-app default) — [docs](https://tailwindcss.com/docs) + Inter via `next/font/google` | Agent-recommended default for fast dark-theme mobile layout; learner may swap for plain CSS. |
-| LLM | Anthropic API via `@anthropic-ai/sdk` — [docs](https://docs.claude.com) | Learner-chosen. |
-| Output validation | `zod` and the SDK's `zodOutputFormat` helper with `client.messages.parse()` | Gets typed, schema-valid JSON back for plan features and script sections. |
+| LLM | Google Gemini API via `@google/genai` — [docs](https://ai.google.dev/gemini-api/docs) | Learner-chosen (switched from Anthropic during the build). |
+| Output validation | `zod` with `z.toJSONSchema()` passed as Gemini's `responseJsonSchema`, then `schema.parse()` on the reply | Gets typed, schema-valid JSON back for plan features and script sections. |
 | Storage | Browser `localStorage` | Matches "stays on the device, no accounts" in the PRD. |
 | Seeded results | `data/negotiations.json` | Static sample data, clearly labeled in the UI. |
 | Matching | Plain TypeScript | Learner-chosen: predictable, no third LLM call. |
 
-**Model:** one constant in `lib/llm.ts`, defaulting to `claude-opus-5-5` (current model IDs and their pricing are in the Anthropic docs; at the time of writing about $4 / $20 per million input / output tokens, trivial at demo volume). Thinking is always on for this model and cannot be disabled, so set `output_config: { effort: "low" }` for the plan call and `"medium"` for the script call. The learner may choose a cheaper model by changing the constant.
+**Model:** one constant in `lib/llm.ts` (`MODEL`, overridable with the `GEMINI_MODEL` env var). Default `gemini-3.5-flash-lite`: it writes a good short script in about 2 seconds, where `gemini-3.8-flash` ranged from 6 to 70 seconds in testing. Model IDs verified against the live model list.
 
 **Unverified, check early in the build:**
 - Exact current `create-next-app` defaults and Node version requirement.
-- That `messages.parse` + `zodOutputFormat` work as shown in the SDK docs for the installed SDK version.
+- That Gemini's `responseJsonSchema` accepts the schema produced by `z.toJSONSchema()` and the chosen model ID exists.
 - The favicon lookup URL (see *External Services*).
 
 ## Where It Runs and How Someone Tries It
 
 - **Runtime:** local Node.js process (Node 20 or newer assumed; verify against the installed Next.js). Browser at phone width (use the browser's device toolbar, or open the laptop's address on a phone on the same Wi-Fi).
-- **Setup:** `npm install`, then create `.env.local` containing `ANTHROPIC_API_KEY=...` (never committed; `.env.local` is in `.gitignore`). Provide `.env.example`.
+- **Setup:** `npm install`, then create `.env.local` containing `GEMINI_API_KEY=...` (never committed; `.env.local` is in `.gitignore`). Provide `.env.example`.
 - **Start:** `npm run dev`, then open `http://localhost:3000`.
 - **Demo recording:** load a few subscriptions (a seed button/script, see `lib/sampleData.ts`) including a Bell internet promo ending in under 30 days, then record the journey in `prd.md > The Core Journey`. A local app is sufficient for submission.
 - **Submission:** a short demo video and a public GitHub repository are both required. Deployment is optional and not planned. If chosen later, Vercel is the one-step target; it would need `ANTHROPIC_API_KEY` set as a project environment variable.
@@ -114,9 +114,9 @@ Contact at top (tappable), brand icon, subscription summary, sectioned script (O
 PRD ref: `prd.md > Script screen`.
 
 ### LLM Module (`lib/llm.ts`) and API Routes
-- `POST /api/plan` — input `{name, category, planText}`. Output `{features: {label, value}[], summary, domain}`. Uses `messages.parse` with a zod schema.
+- `POST /api/plan` — input `{name, category, planText}`. Output `{features: {label, value}[], summary, domain}`. Uses Gemini JSON-schema output validated with zod.
 - `POST /api/script` — input `{subscription, target: {price, source: "result"|"current-promo", result?}, tweak?, previousScript?}`. Output `{sections: {title, body}[]}`. The system prompt tells Claude to be brief, use the given sections, cite the selected result's price if present, and honor the tweak.
-Both routes read `ANTHROPIC_API_KEY` from the environment only; nothing is logged.
+Both routes read `GEMINI_API_KEY` from the environment only; nothing is logged.
 PRD ref: `prd.md > Add subscription` (plan), `prd.md > Script screen`.
 
 ### Template Script (`lib/templateScript.ts`)
@@ -132,8 +132,8 @@ PRD ref: `prd.md > Script screen` (fallback).
 | `id` | generated string |
 | `name`, `category`, `customCategory?` | category from a fixed list or custom |
 | `planText` | what the user typed |
-| `planFeatures` | `{label, value}[]` from Claude; empty if never structured |
-| `logoDomain?` | domain guessed by Claude, e.g. `bell.ca` |
+| `planFeatures` | `{label, value}[]` from the LLM; empty if never structured |
+| `logoDomain?` | domain guessed by the LLM, e.g. `bell.ca` |
 | `contact` | required phone or email |
 | `startDate` | ISO date |
 | `isContract`, `contractMonths?` | |
@@ -162,8 +162,8 @@ buildwithaibasics_2/
 │   │   ├── negotiate/page.tsx        # Negotiate screen
 │   │   └── script/page.tsx           # Script screen
 │   └── api/
-│       ├── plan/route.ts             # Claude: plan text -> features + domain
-│       └── script/route.ts           # Claude: sectioned call script
+│       ├── plan/route.ts             # LLM: plan text -> features + domain
+│       └── script/route.ts           # LLM: sectioned call script
 ├── components/
 │   ├── SubscriptionForm.tsx
 │   ├── SubscriptionRow.tsx
@@ -177,13 +177,13 @@ buildwithaibasics_2/
 │   ├── pricing.ts                    # current/new price, yearly difference
 │   ├── status.ts                     # days left, color, needs-attention
 │   ├── matching.ts                   # equivalent / closest / none
-│   ├── llm.ts                        # Anthropic client, model constant, zod schemas
+│   ├── llm.ts                        # Gemini client, model constant, zod schemas
 │   ├── templateScript.ts             # no-LLM fallback script
 │   └── sampleData.ts                 # demo subscriptions loader
 ├── data/
 │   └── negotiations.json             # seeded sample results
 ├── devpost/                          # Devpost learning workspace
-├── .env.example                      # ANTHROPIC_API_KEY=
+├── .env.example                      # GEMINI_API_KEY=
 ├── .gitignore                        # includes .env.local
 ├── package.json
 └── README.md                         # setup and run steps for reviewers
@@ -191,20 +191,19 @@ buildwithaibasics_2/
 
 ## External Services and Dependencies
 
-### Anthropic Messages API
-- Called only from `app/api/*/route.ts` via `@anthropic-ai/sdk`: `client.messages.parse({model, max_tokens, system, messages, output_config: {format: zodOutputFormat(schema), effort}})`.
-- Auth: `ANTHROPIC_API_KEY` in `.env.local`.
-- Docs: https://docs.claude.com (Messages API, structured outputs).
+### Google Gemini API
+- Called only from `app/api/*/route.ts` via `lib/llm.ts` and `@google/genai`: `ai.models.generateContent({model, contents, config: {systemInstruction, responseMimeType: "application/json", responseJsonSchema}})`, then the JSON is validated with zod.
+- Auth: `GEMINI_API_KEY` in `.env.local`.
+- Docs: https://ai.google.dev/gemini-api/docs (structured output). Keys from https://aistudio.google.com/apikey.
 - Cost: per-token; small for a demo. Rate limits depend on the account tier.
-- Do not use `temperature`, assistant prefill, or forced `tool_choice` with this model; they are rejected.
 
 ### Logo lookup (optional, first thing to cut)
-- Claude returns a best-guess website `domain` for the brand along with the plan features. `BrandIcon` loads a favicon service image for that domain.
+- The LLM returns a best-guess website `domain` for the brand along with the plan features. `BrandIcon` loads a favicon service image for that domain.
 - **Unverified:** which favicon URL gives the best result and whether it returns an error (letting the letter circle take over) or a generic globe when nothing is found. Check this in the build step that adds icons; if it shows globes or looks poor, ship the letter circle only, as the PRD allows.
 - No key, no account.
 
 ### Other dependencies
-Next.js, React, Tailwind, zod, `@anthropic-ai/sdk` — all via npm. Pin versions in `package.json` when installing.
+Next.js, React, Tailwind, zod, `@google/genai` — all via npm. Pin versions in `package.json` when installing.
 
 ## Important Failure Modes
 
@@ -226,19 +225,19 @@ Next.js, React, Tailwind, zod, `@anthropic-ai/sdk` — all via npm. Pin versions
 
 **Learner decisions**
 - Stack: Next.js + TypeScript (after the Next.js vs Vite + Express comparison; agent recommended, learner accepted).
-- LLM provider: Anthropic API.
+- LLM provider: Google Gemini API (changed from Anthropic during the build; see `checklist.md > Revisions`).
 - Matching: plain code, not LLM.
 - LLM failure: assume the API is reachable for the demo; no offline or local-model path.
 
 **Agent-derived implementation details (from the above; changeable)**
-- Tailwind, Inter, the model constant defaulting to `claude-opus-5-5`, effort levels, the `localStorage` key, the file layout, the 30/90-day color scale, the matching score and its 0.5 threshold, and the logo-via-Claude-domain idea.
+- Tailwind, Inter, the `localStorage` key, the file layout, the 30/90-day color scale, the matching score and its 0.5 threshold, and the logo-via-Claude-domain idea.
 - The three script sections (Opening, If they refuse, Closing): the PRD requires at least the first two.
 
 **Learner uncertainty**
 - None identified during the interview. The learner asked clarifying questions about Next.js (answered: framework built on React with routing and server routes), and about a local-model fallback (answered and deferred).
 
 **Open or to check in the build**
-- Verify current Next.js/Node versions, SDK `messages.parse` usage, and the favicon lookup (see Stack and External Services).
+- Verify current Next.js/Node versions, Gemini structured-output usage, and the favicon lookup (see Stack and External Services).
 - Color thresholds and the matching threshold are starting values to tune (`prd.md > Open Questions`).
 - Cancelled-tab row content is assumed to be icon, name and cancelled date (`prd.md > Open Questions`).
 - A seed/demo-data loader is included so the demo can start from a ready state; sample data is labeled in the UI.
