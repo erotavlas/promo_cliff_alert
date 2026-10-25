@@ -1,14 +1,14 @@
 import Link from "next/link";
 import type { Subscription } from "@/lib/types";
-import { currentPrice, money, newPrice } from "@/lib/pricing";
+import { currentPrice, money, newPrice, priceChange } from "@/lib/pricing";
 import { daysLabel, daysLeft, statusColor } from "@/lib/status";
 import BrandIcon from "./BrandIcon";
 
 export default function SubscriptionRow({ sub }: { sub: Subscription }) {
   const now = currentPrice(sub);
   const after = newPrice(sub);
-  const arrow = after > now ? "▲" : after < now ? "▼" : "";
-  const arrowColor = after > now ? "text-bad" : "text-good";
+
+  const change = priceChange(sub);
   const days = daysLeft(sub.promoEndDate);
 
   return (
@@ -32,9 +32,9 @@ export default function SubscriptionRow({ sub }: { sub: Subscription }) {
         </div>
       </div>
       <div className="text-right">
-        <div className="text-lg font-bold text-good">{money(now)}</div>
+        <div className="text-lg font-bold text-ink">{money(now)}</div>
         <div className="text-xs text-muted">
-          then {money(after)} <span className={arrowColor}>{arrow}</span>
+          then {money(after)} <span className={change.color}>{change.symbol}</span>
         </div>
       </div>
     </Link>

@@ -86,7 +86,7 @@ export default function NegotiateView() {
                       <div className="text-xs text-muted">
                         started {money(r.startPrice)}
                       </div>
-                      <div className="text-2xl font-bold text-good">
+                      <div className="text-2xl font-bold text-ink">
                         {money(r.finalPrice)}
                       </div>
                     </div>

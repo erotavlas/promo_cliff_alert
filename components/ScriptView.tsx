@@ -124,7 +124,7 @@ export default function ScriptView() {
           </div>
           <div className="text-right">
             <div className="text-xs text-muted">Ask for</div>
-            <div className="text-xl font-bold text-good">{money(target)}</div>
+            <div className="text-xl font-bold text-ink">{money(target)}</div>
           </div>
         </div>
       </section>

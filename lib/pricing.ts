@@ -21,3 +21,15 @@ export function yearlyIncrease(s: Priced): number {
 export function money(n: number): string {
   return `$${n.toFixed(2)}`;
 }
+
+// How the price changes when the promo ends: red ▲ up, green ▼ down, neutral – unchanged.
+export function priceChange(s: Priced): {
+  symbol: string;
+  color: string;
+  direction: "up" | "down" | "same";
+} {
+  const diff = monthlyIncrease(s);
+  if (diff > 0) return { symbol: "▲", color: "text-bad", direction: "up" };
+  if (diff < 0) return { symbol: "▼", color: "text-good", direction: "down" };
+  return { symbol: "–", color: "text-muted", direction: "same" };
+}

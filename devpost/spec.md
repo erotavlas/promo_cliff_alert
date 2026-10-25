@@ -66,7 +66,7 @@ PRD ref: `prd.md > The Core Journey`.
 Carried from `prd.md > Look and Feel`; no further design interview.
 
 - **Palette (Tailwind theme tokens):** page background charcoal (about `#1e2025`), card background a step lighter (about `#2a2d34`), text soft off-white (about `#e8e8ea`), muted labels mid-gray. Never pure black or white.
-- **Only strong color:** the green → yellow → orange → red status range. Current price green; rising new price red with an up arrow (▲), falling shown green with ▼.
+- **Only strong color:** the green → yellow → orange → red status range. Prices are white; color marks change only: rising new price red with ▲, falling green with ▼, unchanged a neutral gray dash (revised during the build).
 - **Type:** Inter. Large bold numbers for prices, small muted labels.
 - **Layout:** mobile-first, single column, generous spacing, one idea per card, no heavy borders or decoration. The plus button is a small round button fixed bottom-right.
 - **Tone of copy:** plain and calm ("Get started — add a current or new subscription").

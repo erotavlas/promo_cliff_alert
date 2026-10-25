@@ -46,7 +46,7 @@ export function sampleSubscriptions(): SubscriptionInput[] {
       startDate: offsetDate(-900),
       isContract: false,
       fullPrice: 20.99,
-      discount: 5,
+      discount: 0,
       promoEndDate: offsetDate(62),
     },
     {
