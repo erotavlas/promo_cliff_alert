@@ -46,12 +46,15 @@ export function useSubscriptions() {
     [commit],
   );
 
+  // Skips names already stored, so a double click (or a second load) never duplicates.
   const addMany = useCallback(
     (inputs: SubscriptionInput[]) => {
-      const subs = inputs.map(
-        (input): Subscription => ({ ...input, id: newId(), status: "active" }),
-      );
-      commit([...read(), ...subs]);
+      const existing = read();
+      const have = new Set(existing.map((s) => s.name.trim().toLowerCase()));
+      const subs = inputs
+        .filter((input) => !have.has(input.name.trim().toLowerCase()))
+        .map((input): Subscription => ({ ...input, id: newId(), status: "active" }));
+      if (subs.length > 0) commit([...existing, ...subs]);
     },
     [commit],
   );

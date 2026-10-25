@@ -2,7 +2,7 @@
 
 import AddButton from "@/components/AddButton";
 import SubscriptionRow from "@/components/SubscriptionRow";
-import { sampleSubscriptions } from "@/lib/sampleData";
+import { missingSampleSubscriptions } from "@/lib/sampleData";
 import { daysLeft, needsAttention } from "@/lib/status";
 import { useSubscriptions } from "@/lib/storage";
 
@@ -17,7 +17,8 @@ export default function ActivePage() {
   const attentionIds = new Set(attention.map((s) => s.id));
   const others = active.filter((s) => !attentionIds.has(s.id));
 
-  const loadDemo = () => addMany(sampleSubscriptions());
+  const missingDemo = missingSampleSubscriptions(subscriptions.map((s) => s.name));
+  const loadDemo = () => addMany(missingDemo);
 
   return (
     <div>
@@ -25,12 +26,14 @@ export default function ActivePage() {
         <div className="mt-24 text-center">
           <p className="text-lg">Get started — add a current or new subscription</p>
           <p className="mt-2 text-sm text-muted">Tap the + button below.</p>
-          <button
-            onClick={loadDemo}
-            className="mt-6 text-sm text-muted underline underline-offset-4"
-          >
-            or load demo data
-          </button>
+          {missingDemo.length > 0 && (
+            <button
+              onClick={loadDemo}
+              className="mt-6 text-sm text-muted underline underline-offset-4"
+            >
+              or load demo data
+            </button>
+          )}
         </div>
       ) : (
         <div className="space-y-6">
@@ -58,7 +61,7 @@ export default function ActivePage() {
               </div>
             </section>
           )}
-          {loaded && active.length > 0 && (
+          {loaded && active.length > 0 && missingDemo.length > 0 && (
             <button
               onClick={loadDemo}
               className="block text-xs text-muted underline underline-offset-4"
