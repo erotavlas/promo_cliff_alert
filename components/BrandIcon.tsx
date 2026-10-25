@@ -4,10 +4,18 @@ import { useState } from "react";
 
 const MIN_LOGO_PX = 32;
 
-// Looks up the brand's logo from its domain. With no domain, or if the lookup fails
-// it falls back to a neutral letter circle. The service answers an unknown domain with a 404
-// whose body is a tiny 16px globe that browsers still draw, so a small image counts as "no logo".
-// Neutral on purpose: green to red is reserved for the status signal.
+// Logo sources, tried in order:
+// 1. A local file you provide: public/logos/<domain>.png (for example public/logos/telus.com.png).
+// 2. The online favicon lookup. For an unknown domain it answers 404 with a tiny 16px globe that
+//    browsers still draw, so a small image counts as "no logo".
+// 3. A neutral letter circle (green to red is reserved for the status signal).
+function sourcesFor(domain: string): string[] {
+  return [
+    `/logos/${domain}.png`,
+    `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128&fallback_opts=TYPE,SIZE,URL`,
+  ];
+}
+
 export default function BrandIcon({
   name,
   domain,
@@ -17,21 +25,24 @@ export default function BrandIcon({
   domain?: string;
   size?: number;
 }) {
-  const [failedDomain, setFailedDomain] = useState<string | null>(null);
+  const [failed, setFailed] = useState<string[]>([]);
   const letter = (name.trim()[0] ?? "?").toUpperCase();
+  const src = domain ? sourcesFor(domain).find((s) => !failed.includes(s)) : undefined;
 
-  if (domain && failedDomain !== domain) {
+  if (src) {
+    const fail = () => setFailed((f) => [...f, src]);
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
+        key={src}
         aria-hidden
         alt=""
         width={size}
         height={size}
-        src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128&fallback_opts=TYPE,SIZE,URL`}
-        onError={() => setFailedDomain(domain)}
+        src={src}
+        onError={fail}
         onLoad={(e) => {
-          if (e.currentTarget.naturalWidth < MIN_LOGO_PX) setFailedDomain(domain);
+          if (e.currentTarget.naturalWidth < MIN_LOGO_PX) fail();
         }}
         className="shrink-0 rounded-full bg-ink object-contain p-1.5"
         style={{ width: size, height: size }}

@@ -54,6 +54,6 @@ data/           negotiations.json (sample results)
 
 ## Notes and limits
 
-- Logos come from Google's favicon service and fall back to a letter circle when none is found.
+- Logos: a file you add as `public/logos/<domain>.png` (for example `telus.com.png`) is used first, then Google's favicon service, then a letter circle. Only add logos you have the right to use.
 - Clearing site data erases your subscriptions (no accounts in this proof of concept).
 - No notifications: "needs attention" is computed when you open the app.
