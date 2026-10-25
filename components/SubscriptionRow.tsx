@@ -16,7 +16,7 @@ export default function SubscriptionRow({ sub }: { sub: Subscription }) {
       href={`/subscription/${sub.id}`}
       className="flex items-center gap-3 rounded-2xl bg-card p-4"
     >
-      <BrandIcon name={sub.name} />
+      <BrandIcon name={sub.name} domain={sub.logoDomain} />
       <div className="min-w-0 flex-1">
         <div className="truncate font-semibold">{sub.name}</div>
         <div

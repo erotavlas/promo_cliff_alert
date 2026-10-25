@@ -44,7 +44,7 @@ export default function DetailView() {
       </Link>
 
       <header className="flex items-center gap-4 pt-2">
-        <BrandIcon name={sub.name} size={56} />
+        <BrandIcon name={sub.name} domain={sub.logoDomain} size={56} />
         <div>
           <h1 className="text-2xl font-bold">{sub.name}</h1>
           <p className="text-sm" style={{ color: statusColor(days) }}>

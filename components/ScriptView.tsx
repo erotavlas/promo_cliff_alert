@@ -114,7 +114,7 @@ export default function ScriptView() {
           <ContactLink contact={sub.contact} />
         </div>
         <div className="mt-4 flex items-center gap-3">
-          <BrandIcon name={sub.name} />
+          <BrandIcon name={sub.name} domain={sub.logoDomain} />
           <div className="min-w-0 flex-1">
             <div className="truncate font-semibold">{sub.name}</div>
             <div className="text-xs text-muted">

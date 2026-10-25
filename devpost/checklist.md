@@ -69,7 +69,7 @@ Build mode: fast
   Learner check: Edit the Bell price after "negotiating", cancel another subscription, restore it, then cancel and delete it.
   Commit: `Add edit, cancel, restore and delete`
 
-- [ ] **7. Logos, polish and a README for reviewers**
+- [x] **7. Logos, polish and a README for reviewers**
   Becomes usable: Brand icons show a real logo when the lookup works and fall back to the letter circle otherwise; `README.md` explains setup, `.env.local`, and how to run and demo.
   Why now: Logos are the first thing to cut, so they come last; the README is needed for submission.
   PRD ref: `prd.md > Brand icon`, `prd.md > Look and Feel`

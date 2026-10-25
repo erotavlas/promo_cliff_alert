@@ -16,7 +16,7 @@ export default function CancelledPage() {
       {cancelled.map((s) => (
         <li key={s.id} className="rounded-2xl bg-card p-4">
           <div className="flex items-center gap-3">
-            <BrandIcon name={s.name} />
+            <BrandIcon name={s.name} domain={s.logoDomain} />
             <div className="min-w-0 flex-1">
               <div className="truncate font-semibold">{s.name}</div>
               <div className="text-xs text-muted">Cancelled {s.cancelledAt}</div>

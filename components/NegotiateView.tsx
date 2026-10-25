@@ -44,7 +44,7 @@ export default function NegotiateView() {
       </Link>
 
       <header className="flex items-center gap-3 pt-2">
-        <BrandIcon name={sub.name} />
+        <BrandIcon name={sub.name} domain={sub.logoDomain} />
         <div>
           <h1 className="text-xl font-bold">Negotiate {sub.name}</h1>
           <p className="text-sm text-muted">
