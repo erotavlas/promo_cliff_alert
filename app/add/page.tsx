@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import SubscriptionForm from "@/components/SubscriptionForm";
 import { duplicateReason } from "@/lib/duplicates";
@@ -12,7 +13,10 @@ export default function AddPage() {
 
   return (
     <div>
-      <h1 className="mb-4 text-2xl font-bold">Add subscription</h1>
+      <Link href="/" className="text-sm text-muted">
+        ← Back
+      </Link>
+      <h1 className="mb-4 mt-2 text-2xl font-bold">Add subscription</h1>
       <SubscriptionForm
         submitLabel="Save"
         onSubmit={async (input) => {
