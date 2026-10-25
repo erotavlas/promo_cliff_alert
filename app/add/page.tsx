@@ -19,6 +19,7 @@ export default function AddPage() {
       <h1 className="mb-4 mt-2 text-2xl font-bold">Add subscription</h1>
       <SubscriptionForm
         submitLabel="Save"
+        cancelHref="/"
         onSubmit={async (input) => {
           const reason = duplicateReason(input, subscriptions);
           if (reason) throw new Error(reason);

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { CATEGORIES, type SubscriptionInput } from "@/lib/types";
 import { validate, type FormErrors } from "@/lib/validate";
@@ -8,6 +9,7 @@ import { currentPrice, money } from "@/lib/pricing";
 type Props = {
   initial?: SubscriptionInput;
   submitLabel: string;
+  cancelHref: string;
   onSubmit: (input: SubscriptionInput) => Promise<void> | void;
 };
 
@@ -25,6 +27,7 @@ function Err({ message }: { message?: string }) {
 export default function SubscriptionForm({
   initial,
   submitLabel,
+  cancelHref,
   onSubmit,
 }: Props) {
   const startCustom =
@@ -231,13 +234,21 @@ export default function SubscriptionForm({
       </label>
 
       {errors.form && <p className="text-sm text-bad">{errors.form}</p>}
-      <button
-        type="submit"
-        disabled={saving}
-        className="w-full rounded-xl bg-ink py-3 font-semibold text-page disabled:opacity-60"
-      >
-        {saving ? "Saving…" : submitLabel}
-      </button>
+      <div className="flex gap-3">
+        <Link
+          href={cancelHref}
+          className="flex-1 rounded-xl bg-card py-3 text-center font-semibold text-ink"
+        >
+          Cancel
+        </Link>
+        <button
+          type="submit"
+          disabled={saving}
+          className="flex-1 rounded-xl bg-ink py-3 font-semibold text-page disabled:opacity-60"
+        >
+          {saving ? "Saving…" : submitLabel}
+        </button>
+      </div>
     </form>
   );
 }

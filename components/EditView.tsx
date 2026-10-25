@@ -50,6 +50,7 @@ export default function EditView() {
       <SubscriptionForm
         initial={initial}
         submitLabel="Save changes"
+        cancelHref={`/subscription/${sub.id}`}
         onSubmit={async (input) => {
           const reason = duplicateReason(input, subscriptions, sub.id);
           if (reason) throw new Error(reason);
