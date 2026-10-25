@@ -13,6 +13,10 @@ export default function ActivePage() {
     .filter((s) => needsAttention(s))
     .sort((a, b) => daysLeft(a.promoEndDate) - daysLeft(b.promoEndDate));
 
+  // Each subscription appears once: in "Needs attention" or in the list below it.
+  const attentionIds = new Set(attention.map((s) => s.id));
+  const others = active.filter((s) => !attentionIds.has(s.id));
+
   const loadDemo = () => addMany(sampleSubscriptions());
 
   return (
@@ -42,13 +46,13 @@ export default function ActivePage() {
               </div>
             </section>
           )}
-          {active.length > 0 && (
+          {others.length > 0 && (
             <section>
               <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">
-                All subscriptions
+                {attention.length > 0 ? "Other subscriptions" : "All subscriptions"}
               </h2>
               <div className="space-y-3">
-                {active.map((s) => (
+                {others.map((s) => (
                   <SubscriptionRow key={s.id} sub={s} />
                 ))}
               </div>

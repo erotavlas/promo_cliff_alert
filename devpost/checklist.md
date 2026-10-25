@@ -81,7 +81,7 @@ Build mode: fast
 
 ## Hands-on Checkpoints
 
-- [ ] Early usable behavior explored — after slice 3 (negotiate), when the full "needs attention to what others got" journey is visible and feedback can still shape the script
+- [x] Early usable behavior explored — after slice 3 (negotiate), when the full "needs attention to what others got" journey is visible and feedback can still shape the script
 - [ ] Final kick-the-tires exploration and feedback completed
 
 ## Final Review
@@ -101,3 +101,4 @@ Reflection:
 Activity mode: 
 
 ## Revisions
+- Active list shows each subscription once (needs-attention items are not repeated under "Other subscriptions"), and the letter-circle icon is neutral gray instead of multicolor — the learner found the colored icons confusing next to the green-to-red status colors and the duplicate rows confusing; this refines `prd.md > Subscription list` and `spec.md > Brand Icon`.
