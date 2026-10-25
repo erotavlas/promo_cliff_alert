@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { lookupAppIcon } from "@/lib/appIcon";
 
 const MIN_LOGO_PX = 32;
 
@@ -8,7 +9,8 @@ const MIN_LOGO_PX = 32;
 // 1. A local file you provide: public/logos/<domain>.png (for example public/logos/telus.com.png).
 // 2. The online favicon lookup. For an unknown domain it answers 404 with a tiny 16px globe that
 //    browsers still draw, so a small image counts as "no logo".
-// 3. A neutral letter circle (green to red is reserved for the status signal).
+// 3. The brand's app-store icon (lib/appIcon.ts).
+// 4. A neutral letter circle (green to red is reserved for the status signal).
 function sourcesFor(domain: string): string[] {
   return [
     `/logos/${domain}.png`,
@@ -26,8 +28,27 @@ export default function BrandIcon({
   size?: number;
 }) {
   const [failed, setFailed] = useState<string[]>([]);
+  const [appIcon, setAppIcon] = useState<string | null>(null);
   const letter = (name.trim()[0] ?? "?").toUpperCase();
-  const src = domain ? sourcesFor(domain).find((s) => !failed.includes(s)) : undefined;
+
+  const fixed = domain ? sourcesFor(domain) : [];
+  const fixedExhausted = !!domain && fixed.every((s) => failed.includes(s));
+
+  // Only ask for the app icon once the local file and favicon have both failed.
+  useEffect(() => {
+    if (!domain || !fixedExhausted) return;
+    let cancelled = false;
+    void lookupAppIcon(domain).then((url) => {
+      if (!cancelled) setAppIcon(url);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [domain, fixedExhausted]);
+
+  const src =
+    fixed.find((s) => !failed.includes(s)) ??
+    (appIcon && !failed.includes(appIcon) ? appIcon : undefined);
 
   if (src) {
     const fail = () => setFailed((f) => [...f, src]);

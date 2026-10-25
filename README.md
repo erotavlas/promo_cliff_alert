@@ -54,6 +54,6 @@ data/           negotiations.json (sample results)
 
 ## Notes and limits
 
-- Logos: a file you add as `public/logos/<domain>.png` (for example `telus.com.png`) is used first, then Google's favicon service, then a letter circle. Only add logos you have the right to use.
+- Logos are looked up in this order: a file you add as `public/logos/<domain>.png`, then Google's favicon service, then the brand's app-store icon (Apple's public iTunes Search API, matched by brand name), then a letter circle. Logos are fetched live and not stored in this repository; only add local logo files you have the right to use.
 - Clearing site data erases your subscriptions (no accounts in this proof of concept).
 - No notifications: "needs attention" is computed when you open the app.
