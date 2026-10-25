@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Subscription Tracker PRD</title>
+<style>
+  :root { --bg:#1f2125; --card:#2a2d33; --line:#3a3e46; --text:#ececec; --muted:#9aa0aa; --green:#4cc38a; --yellow:#e5c445; --orange:#f08a3c; --red:#ec5b5b; --accent:#8ab4ff; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.55 Inter,system-ui,Segoe UI,sans-serif; }
+  main { max-width:860px; margin:0 auto; padding:32px 16px 80px; }
+  h1 { font-size:1.7rem; margin:0 0 6px; }
+  h2 { font-size:1.2rem; margin:40px 0 12px; }
+  p.sub { color:var(--muted); margin:0 0 8px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; margin:10px 0; }
+  .badge { display:inline-block; padding:2px 10px; border-radius:99px; font-size:.75rem; background:#3a3e46; color:var(--muted); }
+  svg { width:100%; height:auto; }
+  svg text { fill:var(--text); font:13px Inter,system-ui,sans-serif; }
+  svg .box { fill:var(--card); stroke:var(--line); }
+  svg .on { stroke:var(--accent); stroke-width:2.5; }
+  svg .arrow { stroke:var(--muted); fill:none; stroke-width:1.5; }
+  .steps { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+  .steps button { background:var(--card); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:8px 12px; cursor:pointer; font:inherit; }
+  .steps button[aria-pressed="true"] { border-color:var(--accent); color:var(--accent); }
+  #stepbody ul { margin:6px 0 0; padding-left:20px; }
+  details { background:var(--card); border:1px solid var(--line); border-radius:12px; margin:10px 0; padding:4px 16px; }
+  summary { cursor:pointer; padding:10px 0; font-weight:600; }
+  details ul { margin:0 0 12px; padding-left:20px; }
+  li { margin:4px 0; }
+  .row { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--line); }
+  .row:last-child { border:0; }
+  .dot { width:36px; height:36px; border-radius:50%; display:grid; place-items:center; font-weight:700; background:#3a3e46; flex:none; }
+  .grow { flex:1; }
+  .price { text-align:right; font-variant-numeric:tabular-nums; }
+  .g { color:var(--green); } .r { color:var(--red); }
+  .bar { width:6px; align-self:stretch; border-radius:3px; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:600px) { .two { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Subscription Tracker with Negotiation Coach</h1>
+  <p class="sub">Product requirements, draft for review <span class="badge">status: approved</span></p>
+  <p>Tracks subscriptions, flags promos ending within 30 days, and writes a short call script grounded in what others negotiated. Source of truth: <code>devpost/prd.md</code>.</p>
+
+  <h2>The core journey</h2>
+  <p class="sub">Tap a step in the diagram or the buttons to see what happens there.</p>
+  <svg viewBox="0 0 800 130" role="img" aria-label="Journey: Add, List, Detail, Negotiate, Script, Outcome">
+    <g id="nodes"></g>
+  </svg>
+  <div class="steps" id="stepbtns"></div>
+  <div class="card" id="stepbody"></div>
+
+  <h2>Scope became this</h2>
+  <div class="two">
+    <div class="card"><span class="badge">Scope said</span><p>"The user opens the app and sees an action area at the top ... they tap one to see its details ... they can tap Negotiate."</p></div>
+    <div class="card"><span class="badge">Now we know</span><p>A 30-day automatic window, color-coded rows, Active and Cancelled tabs, a required plan and contact, seeded results filtered and sorted, and a sectioned script with a template fallback.</p></div>
+  </div>
+
+  <h2>What a list row looks like</h2>
+  <div class="card">
+    <div class="row"><div class="bar" style="background:var(--red)"></div><div class="dot">B</div><div class="grow"><b>Bell Internet</b><br><span class="sub">promo ends in 12 days</span></div><div class="price"><span class="g">$45</span> / mo<br><span class="r">$60 ▲</span></div></div>
+    <div class="row"><div class="bar" style="background:var(--yellow)"></div><div class="dot">G</div><div class="grow"><b>Gym</b><br><span class="sub">promo ends in 28 days</span></div><div class="price"><span class="g">$30</span> / mo<br><span class="r">$40 ▲</span></div></div>
+    <div class="row"><div class="bar" style="background:var(--green)"></div><div class="dot">N</div><div class="grow"><b>Netflix</b><br><span class="sub">no promo pressure</span></div><div class="price"><span class="g">$17</span> / mo<br><span class="g">$17 –</span></div></div>
+  </div>
+  <p class="sub">Illustration only. Real colors scale with days left.</p>
+
+  <h2>Behavior and checks</h2>
+  <details open><summary>Add subscription</summary><ul>
+    <li>Fields: name, category (custom reveals a text field), plan (own words, typed or dictated, LLM structures it), contact (required), start date, contract or not, full price, discount, promo end date.</li>
+    <li>Current price = full − discount; new price = full.</li>
+    <li>☐ Contact empty: cannot save. ☐ Not a contract hides length. ☐ Save returns to the list.</li>
+  </ul></details>
+  <details><summary>Subscription list and "needs attention"</summary><ul>
+    <li>Row: icon (letter circle if no logo), name, status color, monthly now, monthly after promo, up/down arrow.</li>
+    <li>☐ 30 days or fewer, or already past: in the top area. ☐ 31+ days: not. ☐ Color moves green to red.</li>
+    <li>Empty attention area: everything just shows in the list, all green.</li>
+  </ul></details>
+  <details><summary>Detail, cancel, and the Cancelled tab</summary><ul>
+    <li>Icon and name on top, then tenure, dates, promo, plan features, tappable contact, current (green) vs. new (red ▲) monthly and yearly.</li>
+    <li>Actions: Edit, Cancel, Negotiate. No delete on active.</li>
+    <li>☐ Cancel moves it to Cancelled. ☐ Restore returns it. ☐ Delete only there.</li>
+  </ul></details>
+  <details><summary>Negotiate</summary><ul>
+    <li>Seeded results for an equivalent plan: provider, username, started at, ended at. Worse-than-start results hidden; sorted best first; the user picks any one.</li>
+    <li>No exact plan: closest match, else "no results yet". The script is still available, aimed at the current promo price.</li>
+    <li>☐ Sorted, filtered, selectable. ☐ No-results path still produces a script.</li>
+  </ul></details>
+  <details><summary>Script</summary><ul>
+    <li>Tappable contact, brand icon and details at the top; short sections (opening, if they refuse) below.</li>
+    <li>Regenerate or tweak by typed or dictated instruction ("more aggressive").</li>
+    <li>LLM failure: a plain template script with a note. Never an empty screen.</li>
+    <li>☐ Contact opens dialer or email. ☐ Sectioned. ☐ Refusal section cites seeded results. ☐ Failure shows the template.</li>
+  </ul></details>
+
+  <h2>Look and feel</h2>
+  <div class="card">Dark charcoal gray (not black, never pure white), lighter gray cards, soft off-white text, a modern sans-serif such as Inter with big bold prices, and green-to-red as the only strong color. Spacious and uncluttered. Mobile-first.</div>
+
+  <h2>Now vs. deferred</h2>
+  <div class="two">
+    <div class="card"><b>Building</b><ul><li>Form with plan and contact</li><li>List, attention area, detail</li><li>Cancelled tab with restore and delete</li><li>Seeded negotiate screen</li><li>LLM script plus template fallback</li></ul></div>
+    <div class="card"><b>Deferred</b><ul><li>Push notifications</li><li>Calendar view</li><li>Email bill monitoring</li><li>Cheaper-plan suggestions</li><li>Live crowdsourcing</li></ul></div>
+  </div>
+
+  <h2>Still open</h2>
+  <div class="card"><ul>
+    <li><b>Assumption to confirm in the spec:</b> if the LLM can't read the plan description when saving (say, no connection), the subscription still saves with the plan text as typed.</li>
+    <li>During the build: exact color thresholds; Cancelled-row contents.</li>
+  </ul></div>
+</main>
+<script>
+const steps = [
+  ["Add","Tap the small circular plus (always in a lower corner). Fill the form and save; you land on the Active list.",["Plan and contact are required parts of the story","Logo looked up online; letter circle if not found"]],
+  ["List","Active tab: 'needs attention' on top (30 days or fewer, or past), all subscriptions below with colors, prices and arrows.",["Automatic; the user does nothing"]],
+  ["Detail","Icon and name, dates, promo, plan, tappable contact, current price in green vs. new price in red with an up arrow, monthly and yearly.",["Actions: Edit, Cancel, Negotiate"]],
+  ["Negotiate","Seeded results from people on an equivalent plan, best first. Pick the one to aim for, or get the current-price default when there are none.",["Worse-than-start results are hidden"]],
+  ["Script","Contact on top, then a short sectioned script. Regenerate or tweak by voice or text. Template fallback if the LLM fails.",["The 'oh, that's cool' moment"]],
+  ["Outcome","Edit the subscription with the new price, or cancel it. Cancelled ones live on the Cancelled tab with Restore and Delete.",[]]
+];
+const nodes = document.getElementById('nodes'), btns = document.getElementById('stepbtns'), body = document.getElementById('stepbody');
+const NS = "http://www.w3.org/2000/svg";
+function show(i){
+  steps.forEach((_,j)=>{ nodes.children[j*1] && 0; });
+  [...nodes.querySelectorAll('rect')].forEach((r,j)=>r.classList.toggle('on', j===i));
+  [...btns.children].forEach((b,j)=>b.setAttribute('aria-pressed', j===i));
+  const s = steps[i];
+  body.innerHTML = '<b>'+(i+1)+'. '+s[0]+'</b><p>'+s[1]+'</p>'+(s[2].length?'<ul>'+s[2].map(x=>'<li>'+x+'</li>').join('')+'</ul>':'');
+}
+steps.forEach((s,i)=>{
+  const x = 10 + i*130;
+  const r = document.createElementNS(NS,'rect');
+  r.setAttribute('x',x); r.setAttribute('y',40); r.setAttribute('width',110); r.setAttribute('height',50); r.setAttribute('rx',10); r.setAttribute('class','box'); r.style.cursor='pointer';
+  r.addEventListener('click',()=>show(i));
+  const t = document.createElementNS(NS,'text');
+  t.setAttribute('x',x+55); t.setAttribute('y',70); t.setAttribute('text-anchor','middle'); t.textContent = s[0]; t.style.pointerEvents='none';
+  nodes.appendChild(r); nodes.appendChild(t);
+  if(i<steps.length-1){ const a = document.createElementNS(NS,'path'); a.setAttribute('d','M'+(x+110)+' 65 L'+(x+130)+' 65'); a.setAttribute('class','arrow'); nodes.appendChild(a); }
+  const b = document.createElement('button'); b.textContent = (i+1)+'. '+s[0]; b.onclick=()=>show(i); btns.appendChild(b);
+});
+show(0);
+</script>
+</body>
+</html>

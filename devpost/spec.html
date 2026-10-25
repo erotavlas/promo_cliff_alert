@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Subscription Tracker Spec</title>
+<style>
+  :root{--bg:#1e2025;--card:#2a2d34;--text:#e8e8ea;--muted:#9a9ca3;--green:#4cc38a;--red:#e5604d;--amber:#e0a43a;--line:#3a3d45}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 Inter,system-ui,sans-serif}
+  main{max-width:860px;margin:0 auto;padding:24px 16px 80px}
+  h1{font-size:1.7rem;margin:.2em 0}
+  h2{font-size:1.2rem;margin:2.2em 0 .6em}
+  p.sub{color:var(--muted);margin-top:0}
+  .card{background:var(--card);border-radius:12px;padding:16px;margin:12px 0}
+  code{background:#15171b;padding:1px 6px;border-radius:5px;font-size:.88em}
+  .muted{color:var(--muted)}
+  svg{width:100%;height:auto;display:block}
+  svg text{fill:var(--text);font:13px Inter,system-ui,sans-serif}
+  svg .box{fill:#2a2d34;stroke:#4a4e58}
+  svg .key{fill:#3a2a28;stroke:var(--red)}
+  svg .arrow{stroke:var(--muted);fill:none;stroke-width:1.5}
+  .steps{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+  .steps button{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font:inherit;cursor:pointer}
+  .steps button[aria-pressed=true]{border-color:var(--green);color:var(--green)}
+  #stepbody h3{margin:0 0 6px}
+  .tag{display:inline-block;font-size:.8rem;color:var(--muted);margin-right:10px}
+  details{background:var(--card);border-radius:12px;padding:12px 16px;margin:8px 0}
+  summary{cursor:pointer;font-weight:600}
+  pre{background:#15171b;padding:14px;border-radius:10px;overflow-x:auto;font-size:.85rem;line-height:1.45}
+  table{border-collapse:collapse;width:100%;font-size:.92rem}
+  td,th{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+  a{color:var(--green)}
+</style>
+</head>
+<body>
+<main>
+<h1>Subscription Tracker with Negotiation Coach</h1>
+<p class="sub">Technical spec · draft · canonical text is <code>devpost/spec.md</code></p>
+
+<h2>How this works</h2>
+<div class="card">
+  One <b>Next.js</b> project (TypeScript). <b>Screens</b> run in the browser, subscriptions are saved in the browser's <b>localStorage</b>, <b>seeded negotiation results</b> are a JSON file matched by plain code, and a tiny <b>server</b> (two API routes) holds the Anthropic key and makes Claude's two jobs: structure a plan description, and write a sectioned call script.
+</div>
+
+<h2>The pieces</h2>
+<svg viewBox="0 0 820 300" role="img" aria-label="Architecture diagram">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9a9ca3"/></marker></defs>
+  <rect class="box" x="20" y="100" width="190" height="100" rx="10"/>
+  <text x="115" y="130" text-anchor="middle" font-weight="700">Screens (React)</text>
+  <text x="115" y="152" text-anchor="middle">Active · Cancelled · Add/Edit</text>
+  <text x="115" y="172" text-anchor="middle">Detail · Negotiate · Script</text>
+
+  <rect class="box" x="300" y="20" width="200" height="70" rx="10"/>
+  <text x="400" y="50" text-anchor="middle" font-weight="700">localStorage</text>
+  <text x="400" y="70" text-anchor="middle">your subscriptions</text>
+
+  <rect class="box" x="300" y="115" width="200" height="70" rx="10"/>
+  <text x="400" y="145" text-anchor="middle" font-weight="700">Plain code</text>
+  <text x="400" y="165" text-anchor="middle">prices · dates · matching</text>
+
+  <rect class="box" x="300" y="210" width="200" height="70" rx="10"/>
+  <text x="400" y="240" text-anchor="middle" font-weight="700">negotiations.json</text>
+  <text x="400" y="260" text-anchor="middle">seeded sample results</text>
+
+  <rect class="box" x="580" y="100" width="210" height="100" rx="10"/>
+  <text x="685" y="130" text-anchor="middle" font-weight="700">Next.js API routes</text>
+  <text x="685" y="152" text-anchor="middle">/api/plan · /api/script</text>
+  <text x="685" y="172" text-anchor="middle">holds ANTHROPIC_API_KEY</text>
+
+  <rect class="key" x="640" y="225" width="140" height="50" rx="10"/>
+  <text x="710" y="255" text-anchor="middle">Anthropic API</text>
+
+  <path class="arrow" d="M210 130 L300 60" marker-end="url(#a)"/>
+  <path class="arrow" d="M210 150 L300 150" marker-end="url(#a)"/>
+  <path class="arrow" d="M210 175 L300 245" marker-end="url(#a)"/>
+  <path class="arrow" d="M210 125 Q395 -5 580 125" marker-end="url(#a)" transform="translate(0,0)"/>
+  <path class="arrow" d="M685 200 L710 225" marker-end="url(#a)"/>
+</svg>
+
+<h2>The core journey, step by step</h2>
+<p class="muted">Tap a step to see what happens and which files are involved.</p>
+<div class="steps" id="steps"></div>
+<div class="card" id="stepbody"></div>
+
+<h2>Components</h2>
+<details><summary>Storage and subscription hook</summary><p><span class="tag">lib/storage.ts</span><span class="tag">prd: States and Boundaries, Cancelled tab</span></p><p>Reads and writes the list under <code>subtracker.v1</code>; add, update, cancel, restore, delete.</p></details>
+<details><summary>Pricing and status logic</summary><p><span class="tag">lib/pricing.ts</span><span class="tag">lib/status.ts</span><span class="tag">prd: Add subscription, Subscription list, Detail screen</span></p><p>Current = full − discount; new = full. Needs attention at 30 days or fewer, or past. Color hue from green (90+ days) to red (0 or past).</p></details>
+<details><summary>Add / Edit form</summary><p><span class="tag">components/SubscriptionForm.tsx</span><span class="tag">prd: Add subscription</span></p><p>PRD field order; contact required; calls <code>/api/plan</code> on save.</p></details>
+<details><summary>Brand icon</summary><p><span class="tag">components/BrandIcon.tsx</span><span class="tag">prd: Brand icon</span></p><p>Favicon from a Claude-guessed domain, else a letter circle.</p></details>
+<details><summary>Active list, Cancelled, Detail screens</summary><p><span class="tag">app/page.tsx</span><span class="tag">app/cancelled</span><span class="tag">app/subscription/[id]</span></p><p>Needs attention on top, rows with status color and arrow, price comparison cards, Edit / Cancel / Negotiate.</p></details>
+<details><summary>Matching logic</summary><p><span class="tag">lib/matching.ts</span><span class="tag">prd: Negotiate screen</span></p><p>Equivalent, else closest, else none. Drops results where the final price is higher than the start, sorts lowest final first.</p></details>
+<details><summary>Script screen and LLM module</summary><p><span class="tag">app/subscription/[id]/script</span><span class="tag">lib/llm.ts</span><span class="tag">lib/templateScript.ts</span><span class="tag">prd: Script screen</span></p><p>Sectioned script (Opening, If they refuse, Closing); regenerate and tweak; template fallback if the call fails.</p></details>
+
+<h2>Data</h2>
+<div class="card">
+<table>
+<tr><th>Subscription (localStorage)</th><td>id, name, category, customCategory?, planText, planFeatures[], logoDomain?, contact, startDate, isContract, contractMonths?, fullPrice, discount, promoEndDate, status, cancelledAt?</td></tr>
+<tr><th>Derived, not stored</th><td>current/new price, yearly figures, days left, color, needs attention</td></tr>
+<tr><th>NegotiationResult (JSON)</th><td>id, provider, category, username, planFeatures, startPrice, finalPrice</td></tr>
+</table>
+</div>
+
+<h2>Failure modes and simplifications</h2>
+<div class="card">
+<ul>
+<li>Plan call fails → plain error, typed text kept (API assumed reachable for the demo).</li>
+<li>Script call fails → template script plus note.</li>
+<li>Logo not found → letter circle.</li>
+<li>Simplified: localStorage instead of a database; seeded JSON instead of crowdsourcing; plain-code matching; no offline/local model; local run plus recording instead of deployment.</li>
+</ul>
+</div>
+
+<h2>Try it</h2>
+<pre>npm install
+# create .env.local with ANTHROPIC_API_KEY=...
+npm run dev
+# open http://localhost:3000 at phone width</pre>
+</main>
+<script>
+const steps=[
+ ["1 First open","app/page.tsx reads localStorage, finds nothing, and shows “Get started — add a current or new subscription” with the round plus button.","app/page.tsx · lib/storage.ts · components/AddButton.tsx"],
+ ["2 Add","Plus → /add. On save the browser POSTs {name, category, planText} to /api/plan. The server asks Claude for plan features and a website domain, returns them, and the subscription is saved to localStorage.","components/SubscriptionForm.tsx · app/api/plan/route.ts · lib/llm.ts"],
+ ["3 List","Prices, days left, color and needs-attention are computed from today's date. Urgent ones sit in the top area, most urgent first.","lib/pricing.ts · lib/status.ts · components/SubscriptionRow.tsx"],
+ ["4 Detail","Green current price vs red new price with an up arrow, monthly and yearly, plus plan features, contract info and the tappable contact.","app/subscription/[id]/page.tsx · components/PriceComparison.tsx"],
+ ["5 Negotiate","Plain code matches the plan against the seeded results, hides ones that paid more, sorts lowest first. You pick one to aim for.","lib/matching.ts · data/negotiations.json · app/subscription/[id]/negotiate"],
+ ["6 Script","Subscription plus the chosen result go to /api/script. Claude returns sections; the page shows contact on top. Regenerate or tweak. If it fails, the template script appears.","app/api/script/route.ts · lib/templateScript.ts · app/subscription/[id]/script"],
+ ["7 Outcome","Edit updates the record; Cancel moves it to the Cancelled tab, where Restore or Delete are available.","app/subscription/[id]/edit · app/cancelled/page.tsx"]
+];
+const box=document.getElementById('steps'),body=document.getElementById('stepbody');
+function show(i){[...box.children].forEach((b,j)=>b.setAttribute('aria-pressed',j===i));
+ body.innerHTML='<h3></h3><p></p><p class="muted"></p>';
+ body.children[0].textContent=steps[i][0];body.children[1].textContent=steps[i][1];body.children[2].textContent=steps[i][2];}
+steps.forEach((s,i)=>{const b=document.createElement('button');b.textContent=s[0];b.onclick=()=>show(i);box.appendChild(b);});
+show(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scope: Subscription Tracker with Negotiation Coach</title>
+<style>
+  :root{--bg:#f6f7f9;--card:#fff;--ink:#1c2230;--muted:#5d6678;--line:#dfe3ea;--accent:#2f6fed;--good:#1f9d55;--bad:#d64545;--warn:#b7791f}
+  @media (prefers-color-scheme:dark){:root{--bg:#12151c;--card:#1b202b;--ink:#e8ebf2;--muted:#9aa3b5;--line:#2c3342;--accent:#6b9bff;--good:#46c07a;--bad:#ff7a7a;--warn:#e0b04f}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  main{max-width:860px;margin:0 auto;padding:24px 16px 64px}
+  h1{font-size:1.8rem;margin:.2em 0}
+  h2{font-size:1.15rem;margin:0 0 .5em}
+  .tag{display:inline-block;font-size:.75rem;padding:2px 10px;border-radius:99px;background:var(--accent);color:#fff;vertical-align:middle}
+  .lead{color:var(--muted);font-size:1.05rem}
+  section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+  .kernel{border-left:5px solid var(--accent)}
+  .quote{color:var(--muted);font-style:italic}
+  svg{width:100%;height:auto;display:block}
+  svg text{fill:var(--ink);font:13px system-ui,sans-serif}
+  svg .box{fill:var(--card);stroke:var(--line);stroke-width:1.5}
+  svg .hot{fill:var(--card);stroke:var(--accent);stroke-width:2.5}
+  svg .arrow{stroke:var(--muted);stroke-width:1.8;fill:none}
+  svg .small{font-size:11px;fill:var(--muted)}
+  details{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:10px 0;background:var(--bg)}
+  summary{cursor:pointer;font-weight:600}
+  details ul{margin:.6em 0 .2em;padding-left:1.2em}
+  .now summary{color:var(--good)} .later summary{color:var(--warn)} .cut summary{color:var(--bad)}
+  .pricecmp{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+  .p{flex:1;min-width:140px;border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+  .p b{font-size:1.4rem}
+  .p.cur b{color:var(--good)} .p.new b{color:var(--bad)}
+  .steps{display:flex;gap:6px;margin:10px 0}
+  .steps button{flex:1;padding:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;cursor:pointer;font:inherit}
+  .steps button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  #stepbody{min-height:70px}
+  .note{font-size:.85rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+  <span class="tag">scope · approved</span>
+  <h1>Subscription Tracker with Negotiation Coach</h1>
+  <p class="lead">A mobile-friendly app that tracks your subscriptions, warns you when a promo ends or a price rises, then helps you negotiate a better price using what other people actually got.</p>
+
+  <section class="kernel">
+    <h2>The unique kernel</h2>
+    <p>Most trackers stop at <em>"your price is going up."</em> This one goes on to <strong>what to do about it</strong>: crowdsourced negotiation results feed an LLM, which writes a call script grounded in real outcomes.</p>
+  </section>
+
+  <section>
+    <h2>How it fits together</h2>
+    <svg viewBox="0 0 800 250" role="img" aria-label="Diagram: user enters subscription, app flags upcoming price jump, user opens Negotiate, seeded results feed the LLM, which writes a script.">
+      <defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8a93a6"/></marker></defs>
+      <rect class="box" x="10" y="20" width="150" height="70" rx="10"/>
+      <text x="85" y="50" text-anchor="middle">User adds a</text><text x="85" y="68" text-anchor="middle">subscription</text>
+      <rect class="box" x="210" y="20" width="170" height="70" rx="10"/>
+      <text x="295" y="50" text-anchor="middle">App flags promo end</text><text x="295" y="68" text-anchor="middle">+ price jump (red)</text>
+      <rect class="box" x="430" y="20" width="150" height="70" rx="10"/>
+      <text x="505" y="50" text-anchor="middle">User taps</text><text x="505" y="68" text-anchor="middle">Negotiate</text>
+      <rect class="hot" x="630" y="20" width="160" height="70" rx="10"/>
+      <text x="710" y="50" text-anchor="middle">LLM writes call</text><text x="710" y="68" text-anchor="middle">script (the kernel)</text>
+      <rect class="box" x="590" y="160" width="200" height="70" rx="10"/>
+      <text x="690" y="190" text-anchor="middle">Seeded negotiation</text><text x="690" y="208" text-anchor="middle">results (sample data)</text>
+      <path class="arrow" d="M160 55H208" marker-end="url(#a)"/>
+      <path class="arrow" d="M380 55H428" marker-end="url(#a)"/>
+      <path class="arrow" d="M580 55H628" marker-end="url(#a)"/>
+      <path class="arrow" d="M700 160V92" marker-end="url(#a)"/>
+      <text class="small" x="30" y="150">Core loop: check in → see what needs attention → act</text>
+      <text class="small" x="30" y="170">Later: push alerts, calendar, email-bill monitoring, live submissions</text>
+    </svg>
+  </section>
+
+  <section>
+    <h2>Who it's for</h2>
+    <p>Anyone with recurring subscriptions (internet, TV, phone, gym, streaming) who loses track of dates and notices only when a bill jumps. The origin story: a 2-year Bell Canada internet promo expired unnoticed, the bill rose about $10–20/month, and a long phone call was needed to get a new promo.</p>
+  </section>
+
+  <section>
+    <h2>The core loop, step by step</h2>
+    <div class="steps" id="steps">
+      <button class="on" data-i="0">1 Open</button>
+      <button data-i="1">2 Inspect</button>
+      <button data-i="2">3 Negotiate</button>
+    </div>
+    <div id="stepbody"></div>
+    <div class="pricecmp" aria-label="Example price comparison">
+      <div class="p cur">Now<br><b>$60 / mo</b><br><span class="note">$720 / yr</span></div>
+      <div class="p new">After promo ▲<br><b>$75 / mo</b><br><span class="note">$900 / yr (+$180)</span></div>
+    </div>
+    <p class="note">Example numbers for illustration only.</p>
+  </section>
+
+  <section>
+    <h2>What "working" looks like</h2>
+    <p>In the demo video: open the app, see the "needs attention" area, tap a Bell internet subscription whose promo is ending, see current price in green vs. new price in red (monthly and yearly), tap Negotiate to see what others got, then generate a script to read on the phone. <strong>The "oh, that's cool" beat is the script built on real outcomes.</strong></p>
+  </section>
+
+  <section>
+    <h2>The proof-of-concept boundary</h2>
+    <details class="now" open><summary>Now (in the POC)</summary><ul>
+      <li>Manual add-subscription form: category, monthly cost, discount/promo, promo end date, post-promo price</li>
+      <li>Subscription list with a "needs attention" area sorted by date</li>
+      <li>Detail screen: current vs. new price, monthly and yearly, green/red indicators</li>
+      <li>Negotiate screen with pre-written (seeded) sample results</li>
+      <li>LLM-generated negotiation script informed by those results</li>
+      <li>Mobile-sized web app</li>
+    </ul></details>
+    <details class="later"><summary>Later</summary><ul>
+      <li>Background push notifications and the "emergency only / all updates" setting</li>
+      <li>Timeline or calendar view</li>
+      <li>Email-bill monitoring</li>
+      <li>Cheaper-plan suggestions (e.g. ad-supported tiers)</li>
+      <li>Live crowdsourcing: users submit results to a shared database (you plan to add this yourself after the hackathon)</li>
+    </ul></details>
+    <details class="cut"><summary>Explicitly cut</summary><ul>
+      <li>Native phone app: a mobile-sized web app shows the same thing faster</li>
+      <li>Real user accounts: not needed to prove the kernel</li>
+      <li>Moderating crowdsourced entries: only matters once live submissions exist</li>
+      <li>Live crowdsourcing for the hackathon: seeded examples fit the time budget</li>
+    </ul></details>
+  </section>
+
+  <section>
+    <h2>Why this matters</h2>
+    <p class="quote">"I didn't know that it expired... I had to bother them and talk for quite a while on the phone."</p>
+    <p>Plus: hands-on AI agent and LLM experience for your resume, and a working hackathon demo.</p>
+  </section>
+
+  <p class="note">This page is a companion. <code>devpost/scope.md</code> is the canonical document.</p>
+</main>
+<script>
+  var steps = [
+    "<strong>Open the app.</strong> An action area at the top shows the most urgent items (promos ending, renewals coming up), sorted by date. All subscriptions are listed below.",
+    "<strong>Tap a subscription.</strong> See what you pay now, per month and per year, against the new price after the promo. Green means good, red with an up arrow means the price is rising.",
+    "<strong>Tap Negotiate.</strong> See what others successfully negotiated and what to ask for, then generate a script to read on the call. Or decide to switch plans or cancel."
+  ];
+  var body = document.getElementById('stepbody');
+  var btns = document.querySelectorAll('#steps button');
+  function show(i){
+    body.innerHTML = steps[i];
+    btns.forEach(function(b,j){ b.classList.toggle('on', i===j); });
+  }
+  btns.forEach(function(b){ b.addEventListener('click', function(){ show(+b.dataset.i); }); });
+  show(0);
+</script>
+</body>
+</html>
