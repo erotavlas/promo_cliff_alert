@@ -8,6 +8,7 @@ A mobile-friendly web app that tracks your subscriptions, warns you when a promo
 
 - **Active list** with a "needs attention" area (promo ends in 30 days or fewer, or already ended), green-to-red status colors, and current vs. post-promo monthly price with an up/down/no-change indicator.
 - **Detail screen** with monthly and yearly current vs. new price (the new price turns red if it goes up and green if it goes down), plan features, contract info and a tappable contact.
+- **Fixed-price plans** (streaming, music, cloud storage, software, gaming) show a card instead of Negotiate, since nobody can haggle over a posted price: switch to a cheaper tier, cancel, or accept.
 - **Negotiate**: seeded results for an equivalent plan (else the closest match, else "no results yet"), hiding people who ended up paying more, lowest final price first.
 - **Call script**: a short, sectioned script (Opening, If they refuse, Closing) written by Google Gemini from your subscription and the result you picked. Regenerate or tweak it ("more aggressive"). If the AI call fails, a plain template script appears instead.
 - **Plan in your own words**: Gemini turns your description into structured plan features and guesses the provider's website for the logo.

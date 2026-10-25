@@ -6,6 +6,7 @@ import { useState } from "react";
 import BrandIcon from "@/components/BrandIcon";
 import negotiations from "@/data/negotiations.json";
 import { matchResults } from "@/lib/matching";
+import { isNegotiable } from "@/lib/negotiable";
 import { currentPrice, money } from "@/lib/pricing";
 import { useSubscriptions } from "@/lib/storage";
 import type { NegotiationResult } from "@/lib/types";
@@ -30,6 +31,16 @@ export default function NegotiateView() {
         <p>Subscription not found.</p>
         <Link href="/" className="mt-3 inline-block text-muted underline">
           Back to your list
+        </Link>
+      </div>
+    );
+
+  if (!isNegotiable(sub.category))
+    return (
+      <div className="mt-16 text-center">
+        <p>{sub.name} has a fixed price, so there&apos;s nothing to negotiate.</p>
+        <Link href={`/subscription/${sub.id}`} className="mt-3 inline-block text-muted underline">
+          Back to {sub.name}
         </Link>
       </div>
     );

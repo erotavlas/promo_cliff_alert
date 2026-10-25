@@ -4,8 +4,10 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import BrandIcon from "@/components/BrandIcon";
 import ContactLink from "@/components/ContactLink";
+import FixedPriceCard from "@/components/FixedPriceCard";
 import PriceComparison from "@/components/PriceComparison";
 import { daysLabel, daysLeft, statusColor, timeAsSubscriber } from "@/lib/status";
+import { isNegotiable } from "@/lib/negotiable";
 import { money } from "@/lib/pricing";
 import { useSubscriptions } from "@/lib/storage";
 
@@ -90,12 +92,16 @@ export default function DetailView() {
       )}
 
       <div className="grid grid-cols-2 gap-3">
-        <Link
-          href={`/subscription/${sub.id}/negotiate`}
-          className="col-span-2 rounded-xl bg-ink py-3 text-center font-semibold text-page"
-        >
-          Negotiate
-        </Link>
+        {isNegotiable(sub.category) ? (
+          <Link
+            href={`/subscription/${sub.id}/negotiate`}
+            className="col-span-2 rounded-xl bg-ink py-3 text-center font-semibold text-page"
+          >
+            Negotiate
+          </Link>
+        ) : (
+          <FixedPriceCard name={sub.name} />
+        )}
         <Link
           href={`/subscription/${sub.id}/edit`}
           className="rounded-xl bg-card py-3 text-center"
