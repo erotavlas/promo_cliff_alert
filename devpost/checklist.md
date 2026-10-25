@@ -89,7 +89,7 @@ Build mode: fast
 - [x] Final review complete — feedback resolved and learner confirms ready to ship
 
 Final review findings (all resolved, verified, committed): neutral brand icons; each subscription listed once; white prices with a neutral no-change indicator and an unchanged-price demo plan; obvious radio-style selection on Negotiate; duplicate-free, expanded demo data for Bell, Rogers and Telus; logo fallbacks (local file, favicon, app-store icon, letter circle). The learner confirmed the proof of concept is ready and may revisit it later; any new change goes here as an unchecked item and is verified and committed like the rest.
-- [ ] Realistic demo data (one internet, one TV, two mobile lines, plus Crave, Spotify, Amazon Prime, Netflix, Apple TV+, iCloud+, OneDrive, Microsoft 365, Photoshop, Xbox Game Pass) — verified and committed; waiting for the learner to retry loading it
+- [x] Realistic demo data (one internet, one TV, two mobile lines, plus Crave, Spotify, Amazon Prime, Netflix, Apple TV+, iCloud+, OneDrive, Microsoft 365, Photoshop, Xbox Game Pass) — verified and committed; the learner retried it (one internet, one TV, family-named mobile lines, duplicate rule) and confirmed it looks good
 
 ## Code Tour and App Map
 
