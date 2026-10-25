@@ -23,7 +23,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 export default function DetailView() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const { subscriptions, loaded, cancel } = useSubscriptions();
+  const { subscriptions, loaded, cancel, acceptNewPrice } = useSubscriptions();
   const sub = subscriptions.find((s) => s.id === id);
 
   if (!loaded) return null;
@@ -100,7 +100,17 @@ export default function DetailView() {
             Negotiate
           </Link>
         ) : (
-          <FixedPriceCard name={sub.name} />
+          <FixedPriceCard
+            name={sub.name}
+            onAccept={() => {
+              if (
+                window.confirm(
+                  `Keep ${sub.name} at ${money(sub.fullPrice)}/month? It leaves "needs attention" and comes back for review in a year.`,
+                )
+              )
+                acceptNewPrice(sub.id);
+            }}
+          />
         )}
         <Link
           href={`/subscription/${sub.id}/edit`}

@@ -89,6 +89,17 @@ export function useSubscriptions() {
     [change],
   );
 
+  // Keeping a fixed-price plan at its new price: no discount, and the next review is a year away.
+  const acceptNewPrice = useCallback(
+    (id: string) =>
+      change(id, (s) => {
+        const review = new Date();
+        review.setFullYear(review.getFullYear() + 1);
+        return { ...s, discount: 0, promoEndDate: review.toLocaleDateString("en-CA") }; // YYYY-MM-DD, local time
+      }),
+    [change],
+  );
+
   // Only cancelled subscriptions can be deleted (the UI never offers it on active ones).
   const remove = useCallback(
     (id: string) =>
@@ -96,5 +107,5 @@ export function useSubscriptions() {
     [commit],
   );
 
-  return { subscriptions, loaded, add, addMany, update, cancel, restore, remove };
+  return { subscriptions, loaded, add, addMany, update, cancel, restore, acceptNewPrice, remove };
 }
