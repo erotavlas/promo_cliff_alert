@@ -93,15 +93,15 @@ Final review findings (all resolved, verified, committed): neutral brand icons; 
 
 ## Code Tour and App Map
 
-- [ ] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
-- [ ] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
-- [ ] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
+- [x] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
+- [x] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
+- [x] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
 
-Activity and evidence: 
-Route and stops: 
-Edit outcome: 
-Reflection: 
-Activity mode: 
+Activity and evidence: brief recap (the learner chose to skip the hands-on part); practice: validate model output against a schema and keep a non-AI fallback, tied to `generateJson` in `lib/llm.ts` and `templateScript`
+Route and stops: reference route on the map, not toured: `components/ScriptView.tsx` (generate) → `app/api/script/route.ts` (POST) → `lib/llm.ts` (generateJson)
+Edit outcome: declined (no hands-on edit)
+Reflection: not offered separately; the learner declined the hands-on part
+Activity mode: recap
 
 ## Revisions
 - Active list shows each subscription once (needs-attention items are not repeated under "Other subscriptions"), and the letter-circle icon is neutral gray instead of multicolor — the learner found the colored icons confusing next to the green-to-red status colors and the duplicate rows confusing; this refines `prd.md > Subscription list` and `spec.md > Brand Icon`.

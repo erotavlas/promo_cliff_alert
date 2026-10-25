@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>App Map</title>
+<style>
+  :root { --bg:#fff; --ink:#1b1d22; --muted:#5b6170; --card:#f3f4f7; --line:#d5d8e0; --accent:#1f5fd1; --good:#12805c; --bad:#c0392b; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#101216; --ink:#eceef2; --muted:#9aa1b0; --card:#1a1d24; --line:#2c303a; --accent:#7aa7ff; --good:#4cc79a; --bad:#ff7b6b; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 1.6rem; margin: 0 0 4px; }
+  h2 { font-size: 1.15rem; margin: 32px 0 8px; }
+  p, li { color: var(--ink); }
+  .muted { color: var(--muted); }
+  code { background: var(--card); padding: 1px 5px; border-radius: 5px; font: 0.9em ui-monospace, Consolas, monospace; overflow-wrap: anywhere; }
+  .card { background: var(--card); border-radius: 12px; padding: 14px 16px; margin: 10px 0; }
+  .stop h3 { margin: 0 0 4px; font-size: 1rem; }
+  ol.route { padding-left: 0; list-style: none; counter-reset: s; }
+  ol.route > li { counter-increment: s; }
+  ol.route > li h3::before { content: counter(s) ". "; color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+  td, th { text-align: left; vertical-align: top; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; }
+  details { background: var(--card); border-radius: 12px; padding: 10px 16px; margin: 10px 0; }
+  summary { cursor: pointer; font-weight: 600; }
+  summary:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  svg { width: 100%; height: auto; max-width: 100%; }
+  svg text { fill: var(--ink); font: 13px system-ui, sans-serif; }
+  svg .sub { fill: var(--muted); font-size: 11px; }
+  svg .box { fill: var(--card); stroke: var(--line); }
+  svg .arrow { stroke: var(--accent); fill: none; stroke-width: 2; }
+  svg .head { fill: var(--accent); }
+  pre { background: var(--card); padding: 12px; border-radius: 10px; overflow-x: auto; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>App Map</h1>
+  <p class="muted">A subscription tracker that warns you when a promo price is about to end and helps you negotiate a better one. Snapshot of source commit <code>c0b0eb1</code>; files move over time, so search for the names below rather than trusting line numbers.</p>
+
+  <h2>What the app is</h2>
+  <p>A mobile-sized Next.js app. You add subscriptions (internet, TV, mobile lines, streaming, software and so on). The home screen floats the ones whose promo ends within 30 days to the top, and shows the monthly and yearly jump in price. From a subscription you can see what other customers negotiated, then generate a phone script that cites a chosen result.</p>
+  <ul>
+    <li><strong>Your list</strong> lives in the browser (<code>localStorage</code>); there is no database or account.</li>
+    <li><strong>Sample negotiation results</strong> are a seeded JSON file, labelled as sample data in the UI.</li>
+    <li><strong>Gemini</strong> (server-side only) structures a plan description into features and writes the call script.</li>
+  </ul>
+
+  <h2>One action, end to end: "Create script"</h2>
+  <svg viewBox="0 0 720 150" role="img" aria-label="Flow: Script screen calls the script API route, which calls the model helper; on failure the screen uses a template script">
+    <defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" class="head"/></marker></defs>
+    <rect class="box" x="6" y="30" width="200" height="70" rx="10"/>
+    <text x="106" y="58" text-anchor="middle">Script screen</text>
+    <text class="sub" x="106" y="78" text-anchor="middle">components/ScriptView.tsx</text>
+    <rect class="box" x="260" y="30" width="200" height="70" rx="10"/>
+    <text x="360" y="58" text-anchor="middle">API route</text>
+    <text class="sub" x="360" y="78" text-anchor="middle">app/api/script/route.ts</text>
+    <rect class="box" x="514" y="30" width="200" height="70" rx="10"/>
+    <text x="614" y="58" text-anchor="middle">Model call + check</text>
+    <text class="sub" x="614" y="78" text-anchor="middle">lib/llm.ts</text>
+    <path class="arrow" d="M206,55 L258,55" marker-end="url(#a)"/>
+    <path class="arrow" d="M460,55 L512,55" marker-end="url(#a)"/>
+    <path class="arrow" d="M106,100 L106,128 L200,128" marker-end="url(#a)"/>
+    <text class="sub" x="210" y="132">if the call fails: lib/templateScript.ts (same sections, no AI)</text>
+  </svg>
+
+  <h2>Reference route (3 stops)</h2>
+  <p class="muted">A reference route, not one you toured. Open each file and search for the anchor.</p>
+  <ol class="route">
+    <li class="card stop">
+      <h3>The screen asks, and has a fallback</h3>
+      <p><code>components/ScriptView.tsx</code> &rarr; search <code>generate = useCallback</code>. It <code>fetch</code>es <code>/api/script</code>; on any failure it calls <code>templateScript(req)</code> and shows a note, so the screen is never empty.</p>
+    </li>
+    <li class="card stop">
+      <h3>The route validates the request</h3>
+      <p><code>app/api/script/route.ts</code> &rarr; <code>POST</code>. It checks the body with <code>ScriptRequestSchema</code> (from <code>lib/scriptTypes.ts</code>) and returns a generic 502 on failure, with no details, because the request carries personal subscription info.</p>
+    </li>
+    <li class="card stop">
+      <h3>The model call is validated, not trusted</h3>
+      <p><code>lib/llm.ts</code> &rarr; <code>generateJson</code> asks for JSON matching a schema (<code>responseJsonSchema</code>), then <code>schema.parse(...)</code> checks it. <code>describeScriptRequest</code> builds the prompt from stored facts only; <code>SCRIPT_SYSTEM</code> holds the rules ("do not invent prices").</p>
+    </li>
+  </ol>
+
+  <h2>To change this, start here</h2>
+  <table>
+    <tr><th>I want to&hellip;</th><th>Start in</th></tr>
+    <tr><td>Change the demo subscriptions</td><td><code>lib/sampleData.ts</code> &rarr; <code>TEMPLATES</code></td></tr>
+    <tr><td>Add or change sample negotiation results</td><td><code>data/negotiations.json</code>; matching rules in <code>lib/matching.ts</code> &rarr; <code>matchResults</code></td></tr>
+    <tr><td>Add a category</td><td><code>lib/types.ts</code> &rarr; <code>CATEGORIES</code></td></tr>
+    <tr><td>Change what counts as a duplicate</td><td><code>lib/duplicates.ts</code> &rarr; <code>duplicateReason</code></td></tr>
+    <tr><td>Change "needs attention" (30 days) or colours</td><td><code>lib/status.ts</code> &rarr; <code>ATTENTION_DAYS</code>, <code>statusColor</code></td></tr>
+    <tr><td>Change the script tone or sections</td><td><code>lib/llm.ts</code> &rarr; <code>SCRIPT_SYSTEM</code></td></tr>
+    <tr><td>Swap the AI model or provider</td><td><code>lib/llm.ts</code> (only file that knows the provider); <code>.env.example</code></td></tr>
+    <tr><td>Change how prices are computed</td><td><code>lib/pricing.ts</code> &rarr; <code>currentPrice</code>, <code>yearlyIncrease</code></td></tr>
+  </table>
+
+  <details>
+    <summary>Other pieces, in one line each</summary>
+    <ul>
+      <li><code>app/page.tsx</code> &mdash; home: needs-attention list, other subscriptions, demo button.</li>
+      <li><code>lib/storage.ts</code> &mdash; <code>useSubscriptions</code>: read/write the browser list (add, edit, cancel, restore, delete).</li>
+      <li><code>app/api/plan/route.ts</code> + <code>structurePlan</code> in <code>lib/llm.ts</code> &mdash; turns a plan description into features and a website domain.</li>
+      <li><code>components/BrandIcon.tsx</code> &mdash; logo with fallbacks, ending in a neutral letter circle.</li>
+    </ul>
+  </details>
+
+  <h2>A practice to reuse</h2>
+  <div class="card">
+    <p><strong>Treat model output as untrusted input, and keep a non-AI fallback.</strong></p>
+    <p>Here: <code>generateJson</code> in <code>lib/llm.ts</code> parses the reply against a schema before the app uses it, and <code>templateScript</code> in <code>lib/templateScript.ts</code> fills in the same sections when the call fails, so the user never meets an empty screen. On another LLM feature, define the output schema first, validate on the server, and decide what the screen shows when the call fails before you write the prompt.</p>
+  </div>
+
+  <h2>Run it again</h2>
+  <pre>npm install
+copy .env.example .env.local   # then add GEMINI_API_KEY (the app still works without it, using template scripts)
+npm run dev                    # open http://localhost:3000</pre>
+  <p class="muted">Tap the demo-data button on the empty home screen to load 16 sample subscriptions. See <code>README.md</code> for details.</p>
+</main>
+</body>
+</html>
