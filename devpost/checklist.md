@@ -49,7 +49,7 @@ Build mode: fast
   Learner check: Choose a result, generate a script, regenerate it, then tweak it ("make it more aggressive") and confirm the tone changes. Then tell me whether you would read it on a call.
   Commit: `Add LLM-generated call script with template fallback`
 
-- [ ] **5. Describe your plan in your own words and have the LLM structure it**
+- [x] **5. Describe your plan in your own words and have the LLM structure it**
   Becomes usable: The Add form sends the plan description to Claude, which returns structured plan features and a website domain; features show on the detail screen and improve Negotiate matching. A failed call shows a plain error and keeps what was typed.
   Why now: Matching quality depends on structured features, but slices 1–4 already work with raw text, so this improves them rather than blocking them.
   PRD ref: `prd.md > Add subscription` (Plan), `prd.md > States and Boundaries`

@@ -1,6 +1,7 @@
 import { GoogleGenAI, ThinkingLevel } from "@google/genai";
 import { z } from "zod";
-import { ScriptSchema, type Script, type ScriptRequest } from "./scriptTypes";
+import { PlanResultSchema, type PlanRequest, type PlanResult } from "./planTypes";
+import { ScriptSchema,type Script, type ScriptRequest } from "./scriptTypes";
 
 // Server-only: this module reads GEMINI_API_KEY, so import it only from app/api routes.
 // Swap the provider or model here and nowhere else.
@@ -32,6 +33,27 @@ async function generateJson<T extends z.ZodType>(
   });
   if (!response.text) throw new Error("Empty response from the model");
   return schema.parse(JSON.parse(response.text));
+}
+
+// ---- Plan structuring ----------------------------------------------------
+
+const PLAN_SYSTEM = `You turn a customer's own description of a subscription plan into structured plan features.
+
+Rules:
+- Return 2 to 8 features as short label/value pairs (for example Speed: 1.5 Gbps, Data: Unlimited, Calling: Canada-wide). Use the customer's facts only; do not invent features.
+- Keep labels consistent and generic (Speed, Data, Calling, Screens, Ads, Access, Billing, Modem, Extras) so plans from different customers can be compared.
+- summary: one short sentence.
+- domain: the provider's main website domain (no https://, no path) if you are confident, otherwise an empty string.`;
+
+export async function structurePlan(req: PlanRequest): Promise<PlanResult> {
+  const result = await generateJson(
+    PlanResultSchema,
+    PLAN_SYSTEM,
+    `Subscription: ${req.name}\nCategory: ${req.category}\nPlan description: ${req.planText}`,
+  );
+  // Keep only a plausible bare domain; anything else falls back to the letter circle.
+  const domain = result.domain.trim().toLowerCase();
+  return { ...result, domain: /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(domain) ? domain : "" };
 }
 
 // ---- Call script ---------------------------------------------------------
