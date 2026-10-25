@@ -2,7 +2,7 @@
 
 import AddButton from "@/components/AddButton";
 import SubscriptionRow from "@/components/SubscriptionRow";
-import { missingSampleSubscriptions } from "@/lib/sampleData";
+import { missingDemoNames, sampleSubscriptions } from "@/lib/sampleData";
 import { daysLeft, needsAttention } from "@/lib/status";
 import { useSubscriptions } from "@/lib/storage";
 
@@ -17,8 +17,8 @@ export default function ActivePage() {
   const attentionIds = new Set(attention.map((s) => s.id));
   const others = active.filter((s) => !attentionIds.has(s.id));
 
-  const missingDemo = missingSampleSubscriptions(subscriptions.map((s) => s.name));
-  const loadDemo = () => addMany(missingDemo);
+  const missingDemo = missingDemoNames(subscriptions.map((s) => s.name));
+  const loadDemo = () => addMany(sampleSubscriptions()); // storage skips names it already has
 
   return (
     <div>
