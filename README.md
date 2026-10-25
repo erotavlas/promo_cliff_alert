@@ -6,11 +6,12 @@ A mobile-friendly web app that tracks your subscriptions, warns you when a promo
 
 ## What it does
 
-- **Active list** with a "needs attention" area (promo ends in 30 days or fewer, or already ended), green-to-red status colors, and current vs. post-promo monthly price with an up/down arrow.
-- **Detail screen** with monthly and yearly current (green) vs. new (red) price, plan features, contract info and a tappable contact.
+- **Active list** with a "needs attention" area (promo ends in 30 days or fewer, or already ended), green-to-red status colors, and current vs. post-promo monthly price with an up/down/no-change indicator.
+- **Detail screen** with monthly and yearly current vs. new price (the new price turns red if it goes up and green if it goes down), plan features, contract info and a tappable contact.
 - **Negotiate**: seeded results for an equivalent plan (else the closest match, else "no results yet"), hiding people who ended up paying more, lowest final price first.
 - **Call script**: a short, sectioned script (Opening, If they refuse, Closing) written by Google Gemini from your subscription and the result you picked. Regenerate or tweak it ("more aggressive"). If the AI call fails, a plain template script appears instead.
 - **Plan in your own words**: Gemini turns your description into structured plan features and guesses the provider's website for the logo.
+- **One of each service**: you can't have two active internet or TV subscriptions, or two active subscriptions with the same name (mobile lines are fine if each has its own name).
 - **Edit, cancel, restore, delete**: cancelled subscriptions move to the Cancelled tab.
 
 Subscriptions are stored in your browser (`localStorage`); there are no accounts and no database.
@@ -33,8 +34,8 @@ Optional: set `GEMINI_MODEL` in `.env.local` to use a different model (default `
 
 ## Try the demo
 
-1. On the empty home screen, tap **load demo data** (four sample subscriptions, including a Bell internet promo ending soon).
-2. Open **Bell Internet** from "needs attention" and compare the green and red prices.
+1. On the empty home screen, tap **load demo data** (16 sample subscriptions for one household: Bell internet, TV and two mobile lines, plus streaming, music, cloud, software, gaming and gym plans, with several promos ending soon).
+2. Open **Bell Internet** from "needs attention" and compare the current price with the higher price after the promo.
 3. Tap **Negotiate**, select a result, then **Create script**.
 4. Regenerate the script or type a tweak such as "make it more polite".
 
