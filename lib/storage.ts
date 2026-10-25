@@ -46,5 +46,15 @@ export function useSubscriptions() {
     [commit],
   );
 
-  return { subscriptions, loaded, add };
+  const addMany = useCallback(
+    (inputs: SubscriptionInput[]) => {
+      const subs = inputs.map(
+        (input): Subscription => ({ ...input, id: newId(), status: "active" }),
+      );
+      commit([...read(), ...subs]);
+    },
+    [commit],
+  );
+
+  return { subscriptions, loaded, add, addMany };
 }

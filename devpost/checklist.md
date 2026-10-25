@@ -19,7 +19,7 @@ Build mode: fast
   Learner check: Open the app at phone width, add a subscription, reload the page, and say whether it looks and feels the way you pictured.
   Commit: `Scaffold app with add form and active list`
 
-- [ ] **2. "Needs attention" and the detail screen with green vs red prices**
+- [x] **2. "Needs attention" and the detail screen with green vs red prices**
   Becomes usable: Subscriptions ending within 30 days (or already past) float into a "needs attention" area sorted by date, rows shift from green to red, and tapping a row shows monthly and yearly current vs new price. A demo-data button loads a few subscriptions including a Bell internet promo ending soon.
   Why now: This is the "oh no" half of the product and gives us demo data that every later slice needs.
   PRD ref: `prd.md > Subscription list (Active tab)`, `prd.md > Detail screen`

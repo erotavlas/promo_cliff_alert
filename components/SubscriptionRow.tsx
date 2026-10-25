@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Subscription } from "@/lib/types";
 import { currentPrice, money, newPrice } from "@/lib/pricing";
+import { daysLabel, daysLeft, statusColor } from "@/lib/status";
 import BrandIcon from "./BrandIcon";
 
 export default function SubscriptionRow({ sub }: { sub: Subscription }) {
@@ -8,6 +9,7 @@ export default function SubscriptionRow({ sub }: { sub: Subscription }) {
   const after = newPrice(sub);
   const arrow = after > now ? "▲" : after < now ? "▼" : "";
   const arrowColor = after > now ? "text-bad" : "text-good";
+  const days = daysLeft(sub.promoEndDate);
 
   return (
     <Link
@@ -17,15 +19,22 @@ export default function SubscriptionRow({ sub }: { sub: Subscription }) {
       <BrandIcon name={sub.name} />
       <div className="min-w-0 flex-1">
         <div className="truncate font-semibold">{sub.name}</div>
-        <div className="text-xs text-muted">
-          Promo ends {sub.promoEndDate}
+        <div
+          className="flex items-center gap-1.5 text-xs"
+          style={{ color: statusColor(days) }}
+        >
+          <span
+            aria-hidden
+            className="inline-block h-2 w-2 rounded-full"
+            style={{ background: statusColor(days) }}
+          />
+          {daysLabel(days)}
         </div>
       </div>
       <div className="text-right">
         <div className="text-lg font-bold text-good">{money(now)}</div>
         <div className="text-xs text-muted">
-          then {money(after)}{" "}
-          <span className={arrowColor}>{arrow}</span>
+          then {money(after)} <span className={arrowColor}>{arrow}</span>
         </div>
       </div>
     </Link>
