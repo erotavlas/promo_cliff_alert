@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Suspense } from "react";
 import TabNav from "@/components/TabNav";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
@@ -18,7 +19,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full">
         <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-4 pb-24">
-          <TabNav />
+          <Suspense>
+            <TabNav />
+          </Suspense>
           <main className="flex-1">{children}</main>
         </div>
       </body>
