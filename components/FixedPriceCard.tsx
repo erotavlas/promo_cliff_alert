@@ -10,7 +10,7 @@ export default function FixedPriceCard({
     <section className="col-span-2 rounded-2xl bg-card p-4">
       <h2 className="font-semibold">This plan has a fixed price, so there&apos;s nothing to negotiate</h2>
       <p className="mt-1 text-sm text-muted">
-        {name} charges the same posted price to everyone. When the promo ends, your options are:
+        {name} charges the same posted price to everyone. When it renews or the price changes, your options are:
       </p>
       <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
         <li>Switch to a cheaper tier (for example a plan with ads or fewer screens), then use Edit to update the price.</li>
