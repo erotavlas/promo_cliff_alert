@@ -56,5 +56,40 @@ export function useSubscriptions() {
     [commit],
   );
 
-  return { subscriptions, loaded, add, addMany };
+  const change = useCallback(
+    (id: string, fn: (s: Subscription) => Subscription) =>
+      commit(read().map((s) => (s.id === id ? fn(s) : s))),
+    [commit],
+  );
+
+  const update = useCallback(
+    (id: string, input: SubscriptionInput) =>
+      change(id, (s) => ({ ...s, ...input })),
+    [change],
+  );
+
+  const cancel = useCallback(
+    (id: string) =>
+      change(id, (s) => ({
+        ...s,
+        status: "cancelled",
+        cancelledAt: new Date().toLocaleDateString("en-CA"), // YYYY-MM-DD, local time
+      })),
+    [change],
+  );
+
+  const restore = useCallback(
+    (id: string) =>
+      change(id, (s) => ({ ...s, status: "active", cancelledAt: undefined })),
+    [change],
+  );
+
+  // Only cancelled subscriptions can be deleted (the UI never offers it on active ones).
+  const remove = useCallback(
+    (id: string) =>
+      commit(read().filter((s) => !(s.id === id && s.status === "cancelled"))),
+    [commit],
+  );
+
+  return { subscriptions, loaded, add, addMany, update, cancel, restore, remove };
 }

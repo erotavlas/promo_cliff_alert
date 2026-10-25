@@ -59,7 +59,7 @@ Build mode: fast
   Learner check: Add a new subscription with a plan described in your own words and confirm the features on the detail screen match what you meant.
   Commit: `Structure plan descriptions with the LLM`
 
-- [ ] **6. Edit, cancel, restore and delete**
+- [x] **6. Edit, cancel, restore and delete**
   Becomes usable: Edit updates a subscription and the list and status update; Cancel moves it to the Cancelled tab; Restore brings it back; Delete removes it permanently. Active items have no delete.
   Why now: Completes the outcome step of the core journey (after the call you update the new price or cancel).
   PRD ref: `prd.md > Cancelled tab`, `prd.md > Detail screen`, `prd.md > The Core Journey` (step 7)

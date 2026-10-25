@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import BrandIcon from "@/components/BrandIcon";
 import ContactLink from "@/components/ContactLink";
 import PriceComparison from "@/components/PriceComparison";
@@ -20,7 +20,8 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 
 export default function DetailView() {
   const { id } = useParams<{ id: string }>();
-  const { subscriptions, loaded } = useSubscriptions();
+  const router = useRouter();
+  const { subscriptions, loaded, cancel } = useSubscriptions();
   const sub = subscriptions.find((s) => s.id === id);
 
   if (!loaded) return null;
@@ -95,15 +96,20 @@ export default function DetailView() {
         >
           Negotiate
         </Link>
-        <button
-          disabled
-          className="rounded-xl bg-card py-3 text-muted opacity-60"
+        <Link
+          href={`/subscription/${sub.id}/edit`}
+          className="rounded-xl bg-card py-3 text-center"
         >
           Edit
-        </button>
+        </Link>
         <button
-          disabled
-          className="rounded-xl bg-card py-3 text-muted opacity-60"
+          onClick={() => {
+            if (window.confirm(`Cancel ${sub.name}? You can restore it from the Cancelled tab.`)) {
+              cancel(sub.id);
+              router.push("/");
+            }
+          }}
+          className="rounded-xl bg-card py-3 text-bad"
         >
           Cancel subscription
         </button>
