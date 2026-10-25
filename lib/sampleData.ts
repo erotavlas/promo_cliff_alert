@@ -27,8 +27,8 @@ const BELL = { logoDomain: "bell.ca", contact: "1-866-310-2355" };
 const TEMPLATES: Template[] = [
   { ...BELL, name: "Bell Internet", category: "Internet", planText: "1.5 Gbps fibre, unlimited data, Wi-Fi 6 modem", startedDaysAgo: 700, contractMonths: 24, fullPrice: 85, discount: 20, promoEndsInDays: 18 },
   { ...BELL, name: "Bell TV", category: "TV", planText: "Fibe TV, 100+ channels, 2 set-top boxes, PVR", startedDaysAgo: 700, contractMonths: 24, fullPrice: 95, discount: 15, promoEndsInDays: 45 },
-  { ...BELL, name: "Bell Mobility (Line 1)", category: "Cell phone", planText: "100 GB data, unlimited Canada-wide calling", startedDaysAgo: 500, contractMonths: 24, fullPrice: 80, discount: 10, promoEndsInDays: 110 },
-  { ...BELL, name: "Bell Mobility (Line 2)", category: "Cell phone", planText: "50 GB data, unlimited Canada-wide calling", startedDaysAgo: 380, fullPrice: 65, discount: 15, promoEndsInDays: 8 },
+  { ...BELL, name: "Bell Mobility (Alex)", category: "Cell phone", planText: "100 GB data, unlimited Canada-wide calling", startedDaysAgo: 500, contractMonths: 24, fullPrice: 80, discount: 10, promoEndsInDays: 110 },
+  { ...BELL, name: "Bell Mobility (Jordan)", category: "Cell phone", planText: "50 GB data, unlimited Canada-wide calling", startedDaysAgo: 380, fullPrice: 65, discount: 15, promoEndsInDays: 8 },
   { logoDomain: "netflix.com", contact: "help@netflix.com", name: "Netflix", category: "Streaming", planText: "Standard plan, 2 screens, HD, no ads", startedDaysAgo: 900, fullPrice: 20.99, discount: 0, promoEndsInDays: 62 },
   { logoDomain: "disneyplus.com", contact: "help@disneyplus.com", name: "Disney+", category: "Streaming", planText: "Premium plan, 4 screens, 4K, no ads", startedDaysAgo: 330, fullPrice: 18.99, discount: 6, promoEndsInDays: 70 },
   { logoDomain: "crave.ca", contact: "support@crave.ca", name: "Crave", category: "Streaming", planText: "Premium plan, 4 screens, 4K, HBO included, no ads", startedDaysAgo: 340, fullPrice: 22.99, discount: 8, promoEndsInDays: 25 },
@@ -46,7 +46,7 @@ const TEMPLATES: Template[] = [
 // Items from earlier demo sets (several internet/TV plans); loading the demo removes them.
 export const OLD_DEMO_NAMES: readonly string[] = [
   "Rogers Internet", "Rogers TV", "Rogers Mobility",
-  "Telus Internet", "Telus TV", "Telus Mobility", "Bell Mobility",
+  "Telus Internet", "Telus TV", "Telus Mobility", "Bell Mobility", "Bell Mobility (Line 1)", "Bell Mobility (Line 2)",
 ];
 
 export const DEMO_NAMES: readonly string[] = TEMPLATES.map((t) => t.name);
