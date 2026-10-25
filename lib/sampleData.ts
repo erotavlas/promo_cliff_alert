@@ -43,6 +43,12 @@ const TEMPLATES: Template[] = [
   { logoDomain: "goodlifefitness.com", contact: "1-800-387-8010", name: "GoodLife Fitness", category: "Gym", planText: "All-clubs membership, monthly billing", startedDaysAgo: 120, fullPrice: 45, discount: 10, promoEndsInDays: 140 },
 ];
 
+// Items from earlier demo sets (several internet/TV plans); loading the demo removes them.
+export const OLD_DEMO_NAMES: readonly string[] = [
+  "Rogers Internet", "Rogers TV", "Rogers Mobility",
+  "Telus Internet", "Telus TV", "Telus Mobility", "Bell Mobility",
+];
+
 export const DEMO_NAMES: readonly string[] = TEMPLATES.map((t) => t.name);
 
 // Call only from an event handler: it reads today's date.

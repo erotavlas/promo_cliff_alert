@@ -2,12 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import SubscriptionForm from "@/components/SubscriptionForm";
+import { duplicateReason } from "@/lib/duplicates";
 import { withPlanFeatures } from "@/lib/planClient";
 import { useSubscriptions } from "@/lib/storage";
 
 export default function AddPage() {
   const router = useRouter();
-  const { add } = useSubscriptions();
+  const { subscriptions, add } = useSubscriptions();
 
   return (
     <div>
@@ -15,6 +16,8 @@ export default function AddPage() {
       <SubscriptionForm
         submitLabel="Save"
         onSubmit={async (input) => {
+          const reason = duplicateReason(input, subscriptions);
+          if (reason) throw new Error(reason);
           add(await withPlanFeatures(input));
           router.push("/");
         }}

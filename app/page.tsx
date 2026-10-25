@@ -2,7 +2,7 @@
 
 import AddButton from "@/components/AddButton";
 import SubscriptionRow from "@/components/SubscriptionRow";
-import { missingDemoNames, sampleSubscriptions } from "@/lib/sampleData";
+import { OLD_DEMO_NAMES, missingDemoNames, sampleSubscriptions } from "@/lib/sampleData";
 import { daysLeft, needsAttention } from "@/lib/status";
 import { useSubscriptions } from "@/lib/storage";
 
@@ -18,7 +18,7 @@ export default function ActivePage() {
   const others = active.filter((s) => !attentionIds.has(s.id));
 
   const missingDemo = missingDemoNames(subscriptions.map((s) => s.name));
-  const loadDemo = () => addMany(sampleSubscriptions()); // storage skips names it already has
+  const loadDemo = () => addMany(sampleSubscriptions(), OLD_DEMO_NAMES); // skips names already stored
 
   return (
     <div>

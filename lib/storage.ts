@@ -47,14 +47,16 @@ export function useSubscriptions() {
   );
 
   // Skips names already stored, so a double click (or a second load) never duplicates.
+  // staleNames are items from an older demo set, removed so the list stays realistic.
   const addMany = useCallback(
-    (inputs: SubscriptionInput[]) => {
-      const existing = read();
+    (inputs: SubscriptionInput[], staleNames: readonly string[] = []) => {
+      const stale = new Set(staleNames.map((n) => n.trim().toLowerCase()));
+      const existing = read().filter((s) => !stale.has(s.name.trim().toLowerCase()));
       const have = new Set(existing.map((s) => s.name.trim().toLowerCase()));
       const subs = inputs
         .filter((input) => !have.has(input.name.trim().toLowerCase()))
         .map((input): Subscription => ({ ...input, id: newId(), status: "active" }));
-      if (subs.length > 0) commit([...existing, ...subs]);
+      commit([...existing, ...subs]);
     },
     [commit],
   );

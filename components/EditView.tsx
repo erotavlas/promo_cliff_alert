@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import SubscriptionForm from "@/components/SubscriptionForm";
+import { duplicateReason } from "@/lib/duplicates";
 import { withPlanFeatures } from "@/lib/planClient";
 import { useSubscriptions } from "@/lib/storage";
 import type { SubscriptionInput } from "@/lib/types";
@@ -50,6 +51,8 @@ export default function EditView() {
         initial={initial}
         submitLabel="Save changes"
         onSubmit={async (input) => {
+          const reason = duplicateReason(input, subscriptions, sub.id);
+          if (reason) throw new Error(reason);
           // Only re-ask the LLM when the plan text or provider changed (or was never structured).
           const needsPlan =
             input.planText !== sub.planText ||
