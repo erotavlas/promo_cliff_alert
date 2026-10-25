@@ -14,3 +14,9 @@ next-env.d.ts
 *.pem
 .DS_Store
 npm-debug.log*
+
+# hackathon workflow skills (local tooling, not part of the app)
+/.claude/
+/.agents/
+/agent/
+/skills-lock.json
