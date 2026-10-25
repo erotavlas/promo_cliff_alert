@@ -408,5 +408,173 @@
     ],
     "startPrice": 18.99,
     "finalPrice": 15.99
+  },
+  {
+    "id": "crave-1",
+    "provider": "Crave",
+    "category": "Streaming",
+    "username": "couch_chloe",
+    "planFeatures": [
+      {
+        "label": "Plan",
+        "value": "Premium 4 screens 4K HBO no ads"
+      }
+    ],
+    "startPrice": 22.99,
+    "finalPrice": 17.99
+  },
+  {
+    "id": "crave-2",
+    "provider": "Crave",
+    "category": "Streaming",
+    "username": "drama_dan",
+    "planFeatures": [
+      {
+        "label": "Plan",
+        "value": "Premium 4 screens 4K HBO no ads"
+      }
+    ],
+    "startPrice": 22.99,
+    "finalPrice": 19.99
+  },
+  {
+    "id": "appletv-1",
+    "provider": "Apple TV+",
+    "category": "Streaming",
+    "username": "pixel_priya",
+    "planFeatures": [
+      {
+        "label": "Plan",
+        "value": "Individual 6 screens 4K no ads"
+      }
+    ],
+    "startPrice": 12.99,
+    "finalPrice": 6.99
+  },
+  {
+    "id": "prime-1",
+    "provider": "Amazon Prime",
+    "category": "Streaming",
+    "username": "parcel_pat",
+    "planFeatures": [
+      {
+        "label": "Plan",
+        "value": "Prime membership Prime Video free shipping"
+      }
+    ],
+    "startPrice": 9.99,
+    "finalPrice": 9.99
+  },
+  {
+    "id": "prime-2",
+    "provider": "Amazon Prime",
+    "category": "Streaming",
+    "username": "cart_carlos",
+    "planFeatures": [
+      {
+        "label": "Plan",
+        "value": "Prime membership Prime Video free shipping"
+      }
+    ],
+    "startPrice": 9.99,
+    "finalPrice": 12.99
+  },
+  {
+    "id": "spotify-1",
+    "provider": "Spotify",
+    "category": "Music",
+    "username": "vinyl_vera",
+    "planFeatures": [
+      {
+        "label": "Plan",
+        "value": "Premium Duo 2 accounts ad-free offline"
+      }
+    ],
+    "startPrice": 17.99,
+    "finalPrice": 13.99
+  },
+  {
+    "id": "icloud-1",
+    "provider": "iCloud+",
+    "category": "Cloud storage",
+    "username": "cloudy_cam",
+    "planFeatures": [
+      {
+        "label": "Storage",
+        "value": "2 TB family sharing"
+      }
+    ],
+    "startPrice": 14.99,
+    "finalPrice": 14.99
+  },
+  {
+    "id": "onedrive-1",
+    "provider": "Microsoft OneDrive",
+    "category": "Cloud storage",
+    "username": "sky_sam",
+    "planFeatures": [
+      {
+        "label": "Storage",
+        "value": "100 GB standalone storage"
+      }
+    ],
+    "startPrice": 2.69,
+    "finalPrice": 1.99
+  },
+  {
+    "id": "m365-1",
+    "provider": "Microsoft 365",
+    "category": "Software",
+    "username": "office_olive",
+    "planFeatures": [
+      {
+        "label": "Plan",
+        "value": "Family 6 users 1 TB Word Excel PowerPoint"
+      }
+    ],
+    "startPrice": 14.99,
+    "finalPrice": 9.99
+  },
+  {
+    "id": "m365-2",
+    "provider": "Microsoft 365",
+    "category": "Software",
+    "username": "spreadsheet_stu",
+    "planFeatures": [
+      {
+        "label": "Plan",
+        "value": "Family 6 users 1 TB Word Excel PowerPoint"
+      }
+    ],
+    "startPrice": 14.99,
+    "finalPrice": 11.99
+  },
+  {
+    "id": "adobe-1",
+    "provider": "Adobe Photoshop",
+    "category": "Software",
+    "username": "layers_leo",
+    "planFeatures": [
+      {
+        "label": "Plan",
+        "value": "Photoshop single app annual billed monthly 100 GB cloud"
+      }
+    ],
+    "startPrice": 31.49,
+    "finalPrice": 20.99
+  },
+  {
+    "id": "xbox-1",
+    "provider": "Xbox Game Pass",
+    "category": "Gaming",
+    "username": "pad_pete",
+    "planFeatures": [
+      {
+        "label": "Plan",
+        "value": "Ultimate console PC games online multiplayer"
+      }
+    ],
+    "startPrice": 26.99,
+    "finalPrice": 17.99
   }
 ]

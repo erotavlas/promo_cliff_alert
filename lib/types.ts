@@ -4,6 +4,10 @@ export const CATEGORIES = [
   "Cell phone",
   "Gym",
   "Streaming",
+  "Music",
+  "Cloud storage",
+  "Software",
+  "Gaming",
 ] as const;
 
 export type PlanFeature = { label: string; value: string };
