@@ -31,3 +31,20 @@ export type SubscriptionInput = Omit<
   Subscription,
   "id" | "status" | "cancelledAt"
 >;
+
+export type NegotiationResult = {
+  id: string;
+  provider: string;
+  category: string;
+  username: string;
+  planFeatures: PlanFeature[];
+  startPrice: number;
+  finalPrice: number;
+};
+
+export type MatchKind = "equivalent" | "closest" | "none";
+
+export type MatchResult = {
+  kind: MatchKind;
+  results: NegotiationResult[];
+};

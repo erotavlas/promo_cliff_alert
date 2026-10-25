@@ -1,0 +1,111 @@
+[
+  {
+    "id": "bell-int-1",
+    "provider": "Bell",
+    "category": "Internet",
+    "username": "maple_dad",
+    "planFeatures": [
+      { "label": "Speed", "value": "1.5 Gbps fibre" },
+      { "label": "Data", "value": "Unlimited data" }
+    ],
+    "startPrice": 85,
+    "finalPrice": 62
+  },
+  {
+    "id": "bell-int-2",
+    "provider": "Bell",
+    "category": "Internet",
+    "username": "toronto_tess",
+    "planFeatures": [
+      { "label": "Speed", "value": "1.5 Gbps fibre" },
+      { "label": "Data", "value": "Unlimited data" },
+      { "label": "Modem", "value": "Wi-Fi 6 modem" }
+    ],
+    "startPrice": 85,
+    "finalPrice": 70
+  },
+  {
+    "id": "bell-int-3",
+    "provider": "Bell",
+    "category": "Internet",
+    "username": "quietcarl",
+    "planFeatures": [
+      { "label": "Speed", "value": "500 Mbps fibre" },
+      { "label": "Data", "value": "Unlimited data" }
+    ],
+    "startPrice": 75,
+    "finalPrice": 55
+  },
+  {
+    "id": "bell-int-4",
+    "provider": "Bell",
+    "category": "Internet",
+    "username": "just_accepted",
+    "planFeatures": [
+      { "label": "Speed", "value": "1.5 Gbps fibre" },
+      { "label": "Data", "value": "Unlimited data" }
+    ],
+    "startPrice": 80,
+    "finalPrice": 95
+  },
+  {
+    "id": "telus-int-1",
+    "provider": "Telus",
+    "category": "Internet",
+    "username": "calgary_jo",
+    "planFeatures": [
+      { "label": "Speed", "value": "1 Gbps fibre" },
+      { "label": "Data", "value": "Unlimited data" }
+    ],
+    "startPrice": 90,
+    "finalPrice": 65
+  },
+  {
+    "id": "rogers-cell-1",
+    "provider": "Rogers",
+    "category": "Cell phone",
+    "username": "dialed_in",
+    "planFeatures": [
+      { "label": "Data", "value": "50 GB data" },
+      { "label": "Calling", "value": "Unlimited Canada-wide calling" }
+    ],
+    "startPrice": 75,
+    "finalPrice": 58
+  },
+  {
+    "id": "rogers-cell-2",
+    "provider": "Rogers",
+    "category": "Cell phone",
+    "username": "ottawa_priya",
+    "planFeatures": [
+      { "label": "Data", "value": "50 GB data" },
+      { "label": "Calling", "value": "Unlimited Canada-wide calling" },
+      { "label": "Extras", "value": "US roaming" }
+    ],
+    "startPrice": 80,
+    "finalPrice": 66
+  },
+  {
+    "id": "netflix-1",
+    "provider": "Netflix",
+    "category": "Streaming",
+    "username": "binge_ben",
+    "planFeatures": [
+      { "label": "Plan", "value": "Standard 2 screens HD no ads" }
+    ],
+    "startPrice": 20.99,
+    "finalPrice": 17.99
+  },
+  {
+    "id": "gym-1",
+    "provider": "GoodLife Fitness",
+    "category": "Gym",
+    "username": "lift_lena",
+    "planFeatures": [
+      { "label": "Access", "value": "All-clubs membership" },
+      { "label": "Billing", "value": "Monthly billing" }
+    ],
+    "startPrice": 45,
+    "finalPrice": 32
+  }
+]

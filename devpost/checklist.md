@@ -29,7 +29,7 @@ Build mode: fast
   Learner check: Load the demo data, find the Bell internet subscription in "needs attention", open it, and tell me whether the green vs red comparison makes the extra yearly cost obvious.
   Commit: `Add needs-attention list and detail screen`
 
-- [ ] **3. Negotiate: see what others got**
+- [x] **3. Negotiate: see what others got**
   Becomes usable: From a detail screen, Negotiate shows seeded sample results for an equivalent plan (else the closest match, else "no results yet"), no "paid more" entries, lowest final price first, with a "Sample data" label, and you can select one.
   Why now: This is the unique kernel (negotiation results grounded in real outcomes). It goes up early so the rest of the build serves it.
   PRD ref: `prd.md > Negotiate screen`
