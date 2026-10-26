@@ -4,6 +4,8 @@ A mobile-friendly web app that tracks your subscriptions, warns you when a promo
 
 > Built for the Devpost "Build With AI: Basics" learning hackathon. Negotiation results are **sample data** (clearly labeled in the app); live crowdsourcing is not part of this proof of concept.
 
+**Demo video:** https://www.youtube.com/watch?v=sA6OtpYz-hA
+
 ## What it does
 
 - **Active list** with a "needs attention" area (promo ends in 30 days or fewer, or already ended), green-to-red status colors, and current vs. post-promo monthly price with an up/down/no-change indicator.
