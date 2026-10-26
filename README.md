@@ -4,7 +4,7 @@ A mobile-friendly web app that tracks your subscriptions, warns you when a promo
 
 > Built for the Devpost "Build With AI: Basics" learning hackathon. Negotiation results are **sample data** (clearly labeled in the app); live crowdsourcing is not part of this proof of concept.
 
-**Demo video:** https://www.youtube.com/watch?v=nVeB0s0Ll9w
+**Demo video:** [https://www.youtube.com/watch?v=nVeB0s0Ll9w](https://www.youtube.com/watch?v=nVeB0s0Ll9w)
 
 ## What it does
 
